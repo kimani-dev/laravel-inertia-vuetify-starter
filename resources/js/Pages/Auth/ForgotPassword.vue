@@ -40,7 +40,7 @@ const submit = () => {
                         <v-form class="mt-3" @submit.prevent="submit">
                             <v-text-field
                                 label="Email"
-                                :error-messages="form.errors.emailf"
+                                :error-messages="form.errors.email"
                                 v-model="form.email"
                             />
                             <v-btn type="submit" :loading="form.processing"

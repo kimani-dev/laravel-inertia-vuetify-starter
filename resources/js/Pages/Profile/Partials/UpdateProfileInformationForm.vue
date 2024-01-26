@@ -1,13 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
-import ActionMessage from "@/Components/ActionMessage.vue";
-import FormSection from "@/Components/FormSection.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
+import { router, useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
     user: Object,
@@ -38,7 +31,7 @@ const updateProfileInformation = () => {
 
 const sendEmailVerification = () => {
     verificationLinkSent.value = true;
-    router.visit(route("verification.send"));
+    router.post(route("verification.send"));
 };
 
 const selectNewPhoto = () => {
@@ -102,34 +95,35 @@ const clearPhotoFileInput = () => {
                                                 ? user.profile_photo_url
                                                 : photoPreview
                                         "
-                                    ></v-img>
+                                    />
                                 </v-avatar>
-                                <v-btn class="ml-2" @click="selectNewPhoto"
-                                    >Select a New Photo</v-btn
-                                >
+                                <v-btn class="ml-2" @click="selectNewPhoto">
+                                    Select a New Photo
+                                </v-btn>
                                 <v-btn
                                     class="ml-2"
                                     v-if="user.profile_photo_path"
                                     @click="deletePhoto"
-                                    >Remove Photo</v-btn
                                 >
+                                    Remove Photo
+                                </v-btn>
                                 <v-file-input
                                     class="d-none"
                                     ref="photoInput"
                                     @change="updatePhotoPreview"
-                                ></v-file-input>
+                                />
                             </div>
                             <v-text-field
                                 class="mt-3"
                                 label="Name"
                                 v-model="form.name"
                                 :error-messages="form.errors.name"
-                            ></v-text-field>
+                            />
                             <v-text-field
                                 label="Email"
                                 v-model="form.email"
                                 :error-messages="form.errors.email"
-                            ></v-text-field>
+                            />
                             <div
                                 v-if="
                                     $page.props.jetstream
@@ -150,13 +144,14 @@ const clearPhotoFileInput = () => {
                                     v-if="!verificationLinkSent"
                                     class="mt-2"
                                     @click.prevent="sendEmailVerification"
-                                    >Send Email verification Link</v-btn
                                 >
+                                    Send Email verification Link
+                                </v-btn>
                             </div>
                             <div class="d-flex justify-end">
-                                <v-btn type="submit" :loading="form.processing"
-                                    >Save</v-btn
-                                >
+                                <v-btn type="submit" :loading="form.processing">
+                                    Save
+                                </v-btn>
                             </div>
                         </v-form>
                     </v-card-text>

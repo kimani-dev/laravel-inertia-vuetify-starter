@@ -34,7 +34,7 @@ const submit = () => {
                                     Enter Credentials To Continue
                                 </p>
                             </div>
-                            <!-- <v-chip
+                            <v-chip
                                 color="primary"
                                 variant="elevated"
                                 class="my-auto pa-4"
@@ -43,7 +43,7 @@ const submit = () => {
                                     <v-icon icon="mdi-laravel" size="25" />
                                     <p class="text-subtitle-2 ml-2">MY APP</p>
                                 </div>
-                            </v-chip> -->
+                            </v-chip>
                         </div>
                     </v-card-title>
                     <v-card-text class="mt-2">
@@ -72,9 +72,9 @@ const submit = () => {
                         <p class="text-subtitle-2 text-center mt-2">
                             Sign In With Email Address
                         </p>
-                        <p v-if="status" class="text-subtitle-2 text-success">
+                        <!-- <p v-if="status" class="text-subtitle-2 text-success">
                             {{ status }}
-                        </p>
+                        </p> -->
                         <v-form class="mt-2" @submit.prevent="submit">
                             <v-text-field
                                 label="Full Name"
@@ -114,7 +114,7 @@ const submit = () => {
                             />
                             <v-checkbox
                                 class="mt-n5"
-                                :hide-details="form.errors.terms"
+                                :hide-details="!form.errors.terms"
                                 v-model="form.terms"
                                 :error-messages="form.errors.terms"
                                 v-if="

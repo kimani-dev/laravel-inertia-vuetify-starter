@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "sass": "^1.70.0",
+        "sweetalert2": "^11.10.4",
         "vite-plugin-vuetify": "^2.0.1",
         "vuetify": "^3.5.1"
     }

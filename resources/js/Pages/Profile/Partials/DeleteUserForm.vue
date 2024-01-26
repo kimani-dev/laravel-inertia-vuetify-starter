@@ -1,18 +1,18 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import ActionSection from '@/Components/ActionSection.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import DialogModal from '@/Components/DialogModal.vue';
-import InputError from '@/Components/InputError.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import ActionSection from "@/Components/ActionSection.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import DialogModal from "@/Components/DialogModal.vue";
+import InputError from "@/Components/InputError.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
 
 const form = useForm({
-    password: '',
+    password: "",
 });
 
 const confirmUserDeletion = () => {
@@ -22,7 +22,7 @@ const confirmUserDeletion = () => {
 };
 
 const deleteUser = () => {
-    form.delete(route('current-user.destroy'), {
+    form.delete(route("current-user.destroy"), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onError: () => passwordInput.value.focus(),
@@ -38,65 +38,55 @@ const closeModal = () => {
 </script>
 
 <template>
-    <ActionSection>
-        <template #title>
-            Delete Account
-        </template>
-
-        <template #description>
-            Permanently delete your account.
-        </template>
-
-        <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
-            </div>
-
-            <div class="mt-5">
-                <DangerButton @click="confirmUserDeletion">
-                    Delete Account
-                </DangerButton>
-            </div>
-
-            <!-- Delete Account Confirmation Modal -->
-            <DialogModal :show="confirmingUserDeletion" @close="closeModal">
-                <template #title>
-                    Delete Account
-                </template>
-
-                <template #content>
-                    Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
-
-                    <div class="mt-4">
-                        <TextInput
-                            ref="passwordInput"
-                            v-model="form.password"
-                            type="password"
-                            class="mt-1 block w-3/4"
-                            placeholder="Password"
-                            autocomplete="current-password"
-                            @keyup.enter="deleteUser"
-                        />
-
-                        <InputError :message="form.errors.password" class="mt-2" />
-                    </div>
-                </template>
-
-                <template #footer>
-                    <SecondaryButton @click="closeModal">
-                        Cancel
-                    </SecondaryButton>
-
-                    <DangerButton
-                        class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteUser"
-                    >
+    <v-container>
+        <v-card>
+            <v-card-title>
+                <p class="text-h5">Delete Account</p>
+                <p class="text-subtitle-2">Permanently Delete Your Account</p>
+            </v-card-title>
+            <v-card-text>
+                <p class="text-subtitle-2">
+                    Once your account is deleted, all of its resources and data
+                    will be permanently deleted. Before deleting your account,
+                    please download any data or information that you wish to
+                    retain.
+                </p>
+                <div class="d-flex justify-end">
+                    <v-btn color="error" @click="confirmUserDeletion">
                         Delete Account
-                    </DangerButton>
-                </template>
-            </DialogModal>
-        </template>
-    </ActionSection>
+                    </v-btn>
+                </div>
+            </v-card-text>
+        </v-card>
+    </v-container>
+
+    <v-dialog v-model="confirmingUserDeletion" :persistent="form.processing">
+        <v-card class="mx-auto" width="500">
+            <v-card-title>Delete Account</v-card-title>
+            <v-card-text>
+                <p class="text-subtitle-2">
+                    Are you sure you want to delete your account? Once your
+                    account is deleted, all of its resources and data will be
+                    permanently deleted. Please enter your password to confirm
+                    you would like to permanently delete your account.
+                </p>
+                <v-text-field
+                    ref="passwordInput"
+                    label="Password"
+                    class="mt-3"
+                    v-model="form.password"
+                    :error-messages="form.errors.password"
+                    @keyup.enter="deleteUser"
+                />
+                <div class="d-flex mt-2 justify-space-between">
+                    <v-btn :disabled="form.processing" @click="closeModal">
+                        Cancel
+                    </v-btn>
+                    <v-btn :loading="form.processing" @click="deleteUser">
+                        Confirm
+                    </v-btn>
+                </div>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>
