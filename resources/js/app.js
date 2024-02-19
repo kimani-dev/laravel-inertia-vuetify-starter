@@ -9,6 +9,9 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import vuetify from "./plugins/vuetify";
 import { router } from "@inertiajs/vue3";
 
+//components
+import MyDialog from "./Components/MyDialog.vue";
+
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 createInertiaApp({
@@ -38,6 +41,8 @@ createInertiaApp({
                         }
                     },
                 })
+                //components
+                .component("my-dialog", MyDialog)
                 .mount(el)
         );
     },

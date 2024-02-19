@@ -1,35 +1,18 @@
 <script setup>
+import SideBar from "./SideBar.vue";
 const logout = () => {
     router.post(route("logout"));
 };
 </script>
 
 <template>
+    <SideBar />
     <v-app-bar title="Laravel Starter Kit">
         <div class="h-100 w-100 d-flex align-center justify-space-between">
-            <!-- Menu Links Start -->
-            <div>
-                <v-chip
-                    v-use-inertia-link
-                    color="primary"
-                    variant="elevated"
-                    class="pa-4"
-                    :href="route('dashboard')"
-                >
-                    <div class="d-flex align-center">
-                        <v-icon icon="mdi-laravel"></v-icon>
-                        <p class="text-subtitle-1 ml-2">MY APP</p>
-                    </div>
-                </v-chip>
-                <v-btn
-                    v-use-inertia-link
-                    class="ml-2"
-                    :href="route('dashboard')"
-                    :active="route().current('dashboard')"
-                    >Dashboard
-                </v-btn>
+            <div class="d-flex">
+                <v-icon icon="mdi-menu" class="my-auto" />
+                <p class="text-h5 ml-2 text-primary">Laravel</p>
             </div>
-            <!-- Menu Links End -->
             <div>
                 <v-badge :content="8" color="red-lighten-1">
                     <v-btn icon="mdi-bell" variant="tonal" class="my-auto" />
@@ -48,7 +31,7 @@ const logout = () => {
                                     :src="
                                         $page.props.auth.user.profile_photo_url
                                     "
-                                ></v-img>
+                                />
                             </v-avatar>
                         </v-chip>
                     </template>

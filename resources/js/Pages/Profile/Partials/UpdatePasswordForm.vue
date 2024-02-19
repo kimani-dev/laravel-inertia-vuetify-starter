@@ -49,14 +49,29 @@ const updatePassword = () => {
                                 label="Current Password"
                                 v-model="form.current_password"
                                 :error-messages="form.errors.current_password"
-                            ></v-text-field>
+                                prepend-inner-icon="mdi-lock-outline"
+                                type="password"
+                                ref="currentPasswordInput"
+                            />
                             <v-text-field
                                 label="New Password"
                                 v-model="form.password"
                                 :error-messages="form.errors.password"
-                            ></v-text-field>
+                                prepend-inner-icon="mdi-lock-outline"
+                                type="password"
+                                ref="passwordInput"
+                            />
+                            <v-text-field
+                                label="Confirm Password"
+                                v-model="form.password_confirmation"
+                                :error-messages="
+                                    form.errors.password_confirmation
+                                "
+                                prepend-inner-icon="mdi-lock-outline"
+                                type="password"
+                            />
                             <div class="d-flex justify-end">
-                                <v-btn type="submit">Save</v-btn>
+                                <v-btn type="submit" text="Save" />
                             </div>
                         </v-form>
                     </v-card-text>

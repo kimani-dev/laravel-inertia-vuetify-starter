@@ -82,13 +82,17 @@ const clearPhotoFileInput = () => {
                         </p>
                     </v-card-title>
                     <v-card-text>
-                        <v-form @submit="updateProfileInformation">
+                        <v-form @submit.prevent="updateProfileInformation">
                             <div
                                 v-if="
                                     $page.props.jetstream.managesProfilePhotos
                                 "
                             >
-                                <v-avatar rounded="0" size="50">
+                                <v-avatar
+                                    rounded="50"
+                                    size="50"
+                                    @click="selectNewPhoto"
+                                >
                                     <v-img
                                         :src="
                                             !photoPreview
@@ -97,9 +101,6 @@ const clearPhotoFileInput = () => {
                                         "
                                     />
                                 </v-avatar>
-                                <v-btn class="ml-2" @click="selectNewPhoto">
-                                    Select a New Photo
-                                </v-btn>
                                 <v-btn
                                     class="ml-2"
                                     v-if="user.profile_photo_path"
@@ -110,6 +111,7 @@ const clearPhotoFileInput = () => {
                                 <v-file-input
                                     class="d-none"
                                     ref="photoInput"
+                                    accept="image/*"
                                     @change="updatePhotoPreview"
                                 />
                             </div>
@@ -118,11 +120,13 @@ const clearPhotoFileInput = () => {
                                 label="Name"
                                 v-model="form.name"
                                 :error-messages="form.errors.name"
+                                prepend-inner-icon="mdi-account-outline"
                             />
                             <v-text-field
                                 label="Email"
                                 v-model="form.email"
                                 :error-messages="form.errors.email"
+                                prepend-inner-icon="mdi-email-outline"
                             />
                             <div
                                 v-if="

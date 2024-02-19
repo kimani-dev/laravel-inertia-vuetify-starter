@@ -37,10 +37,11 @@ router.on("finish", () => {
             </v-overlay>
             <v-layout>
                 <AppBar />
-                <v-container fluid>
-                    <slot />
-                </v-container>
-                <v-main></v-main>
+                <v-main>
+                    <v-container fluid>
+                        <slot />
+                    </v-container>
+                </v-main>
             </v-layout>
         </v-container>
     </div>
