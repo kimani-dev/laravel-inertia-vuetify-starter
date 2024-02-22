@@ -28,8 +28,6 @@ defineProps({
                             <UpdateProfileInformationForm
                                 :user="$page.props.auth.user"
                             />
-
-                            <SectionBorder />
                         </div>
                     </div>
 

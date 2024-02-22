@@ -13,7 +13,7 @@ export default createVuetify({
     },
     //Setup default theme and other themes as well as specify colors
     theme: {
-        defaultTheme: "light",
+        defaultTheme: localStorage.getItem("theme") || "light",
         themes: {
             light: {
                 colors: {
@@ -26,8 +26,13 @@ export default createVuetify({
     // Setup defaults for components globaly
     defaults: {
         VBtn: { color: "primary", class: "text-capitalize" },
-        VTextField: { variant: "outlined", rounded: "lg", color: "primary" },
         VCard: { rounded: "lg" },
+        // form items
         VCheckbox: { color: "primary" },
+        VTextField: { variant: "outlined", rounded: "lg", color: "primary" },
+        VSelect: { variant: "outlined", rounded: "lg", color: "primary" },
+        VTextarea: { variant: "outlined", rounded: "lg", color: "primary" },
+        VSlider: { color: "primary" },
+        VFileInput: { color: "primary", rounded: "lg", variant: "outlined" },
     },
 });

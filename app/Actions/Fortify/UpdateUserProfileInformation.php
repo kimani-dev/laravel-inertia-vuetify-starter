@@ -2,8 +2,12 @@
 
 namespace App\Actions\Fortify;
 
+use App\Mail\NewEmailChangeMail;
+use App\Mail\OldEmailChangeMail;
 use App\Models\User;
+use App\Notifications\EmailChangeNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -27,15 +31,30 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
-            $this->updateVerifiedUser($user, $input);
+        if ($input['email'] !== $user->email) {
+            $oldEmail = $user->email;
+            if ($user instanceof MustVerifyEmail) {
+                $this->updateVerifiedUser($user, $input);
+            } else {
+                $user->forceFill([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                ])->save();
+
+                Mail::to($oldEmail)->send(new OldEmailChangeMail($user, $oldEmail));
+                // notify user
+                $user->notify(new EmailChangeNotification($user));
+            }
         } else {
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
             ])->save();
         }
+
+        // send flash message
+        session()->flash('message', 'Profile updated.');
+        session()->flash('type', 'success');
     }
 
     /**

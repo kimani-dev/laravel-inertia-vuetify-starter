@@ -11,6 +11,7 @@ import { router } from "@inertiajs/vue3";
 
 //components
 import MyDialog from "./Components/MyDialog.vue";
+import { Can } from "./Support/can";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -41,6 +42,7 @@ createInertiaApp({
                         }
                     },
                 })
+                .use(Can)
                 //components
                 .component("my-dialog", MyDialog)
                 .mount(el)

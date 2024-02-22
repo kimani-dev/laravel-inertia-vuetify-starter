@@ -22,7 +22,6 @@ class PermissionSeeder extends Seeder
         $resources = [
             'users',
             'roles',
-            'permissions',
         ];
 
         $permissions = [

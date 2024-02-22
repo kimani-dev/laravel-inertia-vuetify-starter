@@ -1,4 +1,5 @@
 <script setup>
+import { watchEffect } from "vue";
 import { ref } from "vue";
 
 const props = defineProps({
@@ -10,16 +11,27 @@ const props = defineProps({
         type: String,
         required: false,
     },
+    showDialog: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
+
+const emit = defineEmits(["closed"]);
 
 const dialog = ref(false);
 function closeDialog() {
     dialog.value = false;
 }
+
+watchEffect(() => {
+    dialog.value = props.showDialog;
+});
 </script>
 
 <template>
-    <v-dialog v-model="dialog" transition="dialog-bottom-transition">
+    <v-dialog v-model="dialog" transition="dialog-bottom-transition" persistent>
         <template #activator="{ props }">
             <slot name="activator" :props="props">
                 <v-btn v-bind="props" text="Open Dialog" />

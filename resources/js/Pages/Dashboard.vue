@@ -1,6 +1,14 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { computed } from "vue";
+
+const greeting = computed(() => {
+    const date = new Date();
+    const hours = date.getHours();
+    if (hours < 12) return "Good Morning";
+    if (hours < 18) return "Good Afternoon";
+    return "Good Evening";
+});
 </script>
 
 <template>
@@ -8,7 +16,7 @@ import Welcome from '@/Components/Welcome.vue';
         <v-container fluid>
             <v-row>
                 <v-col>
-                    <h1>Dashboard</h1>
+                    <h1 class="text-h5">{{ `${greeting}, ${$page.props.auth.user.name}` }}</h1>
                 </v-col>
             </v-row>
         </v-container>

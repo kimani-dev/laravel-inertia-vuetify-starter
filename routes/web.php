@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AccessLogsController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,4 +39,12 @@ Route::middleware([
     // users
     Route::resource('users', UserController::class)
         ->names('users');
+    //user notifications - mark as read
+    Route::put('/users/{user}/notifications', [UserController::class, 'MarkNotificationsAsRead'])
+        ->name('users.notifications.mark-as-read');
+    //roles and permissions
+    Route::resource('roles', RoleController::class);
+    //logs
+    Route::get('/logs', [AccessLogsController::class, 'index'])
+        ->name('logs.index');
 });

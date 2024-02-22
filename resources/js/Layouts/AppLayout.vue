@@ -1,8 +1,12 @@
 <script setup>
 import { ref } from "vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 import AppBar from "@/Components/AppBar.vue";
+import { computed } from "vue";
+import { watch } from "vue";
 
 defineProps({
     title: String,
@@ -17,10 +21,28 @@ router.on("start", () => {
         loading.value = true;
     }, 250);
 });
+
 router.on("finish", () => {
     clearTimeout(timeout);
     loading.value = false;
 });
+
+// flash
+const flash = ref({
+    type: null,
+    message: null,
+});
+watch(
+    () => usePage().props.flash,
+    ({ type, message }) => {
+        toast(message, {
+            theme: "colored",
+            type,
+            transition: "slide",
+            timer: 3000,
+        });
+    }
+);
 </script>
 
 <template>

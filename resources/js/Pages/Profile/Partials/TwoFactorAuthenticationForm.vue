@@ -144,7 +144,7 @@ const disableTwoFactorAuthentication = () => {
 
                 <!-- Two Factor Enable Start -->
                 <div v-if="twoFactorEnabled">
-                    <div v-if="qrCode">
+                    <div v-if="!!qrCode">
                         <div class="mt-4 text-subtitle-2">
                             <p v-if="confirming" class="font-weight-bold">
                                 To finish enabling two factor authentication,

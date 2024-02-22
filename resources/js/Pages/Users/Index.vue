@@ -1,10 +1,14 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import IndexView from "@/Layouts/IndexView.vue";
 
 //props
 const props = defineProps({
     users: {
+        type: Array,
+        required: true,
+    },
+    roles: {
         type: Array,
         required: true,
     },
@@ -31,49 +35,117 @@ const form = useForm({
     email: "",
     role: null,
 });
+
+function createUser(closeDialog) {
+    form.post(route("users.store"), {
+        onSuccess: () => {
+            form.reset();
+            closeDialog();
+            reloadData();
+        },
+    });
+}
+
+function reloadData() {
+    router.reload({ only: ["users"] });
+}
 </script>
 
 <template>
-    <IndexView title="Users" :headers="headers" :items="users">
+    <IndexView
+        title="Users"
+        :headers="headers"
+        :items="users"
+        route-name="users"
+        @create="(close) => createUser(close)"
+        @edit="reloadData"
+        @delete="reloadData"
+    >
         <template #prepend>
-            <my-dialog
-                title="Create User"
-                subtitle="Add a new user to the system"
-            >
-                <template #activator="{ props }">
-                    <v-btn v-bind="props" text="Add User" />
-                </template>
-                <template #content>
-                    <v-text-field
-                        label="Name"
-                        prepend-inner-icon="mdi-account-outline"
-                        v-model="name"
-                        :error-messages="form.errors.name"
-                    />
-                    <v-text-field
-                        label="Email"
-                        prepend-inner-icon="mdi-email-outline"
-                        v-model="email"
-                        :error-messages="form.errors.email"
-                    />
-                    <v-select
-                        label="Role"
-                        prepend-inner-icon="mdi-shield-account-outline"
-                        v-model="role"
-                        :items="roles"
-                        :error-messages="form.errors.role"
-                        item-title="name"
-                        item-value="id"
-                    />
-                </template>
-                <template #action-button>
+            <div class="d-flex justify-space-between">
+                <div>
                     <v-btn
-                        variant="elevated"
-                        text="Save"
-                        :loading="form.processing"
+                        prepend-icon="mdi-sort"
+                        variant="text"
+                        text="Sort Users"
                     />
-                </template>
-            </my-dialog>
+                    <v-btn
+                        prepend-icon="mdi-export"
+                        variant="text"
+                        text="Export Users"
+                    />
+                </div>
+            </div>
+        </template>
+        <template #create-content>
+            <v-form @submit.prevent>
+                <v-text-field
+                    label="Name"
+                    prepend-inner-icon="mdi-account-outline"
+                    v-model="form.name"
+                    :error-messages="form.errors.name"
+                />
+                <v-text-field
+                    label="Email"
+                    prepend-inner-icon="mdi-email-outline"
+                    v-model="form.email"
+                    :error-messages="form.errors.email"
+                />
+                <v-select
+                    label="Role"
+                    prepend-inner-icon="mdi-shield-account-outline"
+                    v-model="form.role"
+                    :items="roles"
+                    :error-messages="form.errors.role"
+                    :item-title="
+                        (item) =>
+                            item.name
+                                .split(' ')
+                                .map(
+                                    (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1)
+                                )
+                                .join(' ')
+                    "
+                    item-value="id"
+                />
+            </v-form>
+        </template>
+        <template #edit-content="{ editForm }">
+            <v-form @submit.prevent>
+                <v-text-field
+                    label="Name"
+                    prepend-inner-icon="mdi-account-outline"
+                    v-model="editForm.name"
+                    :error-messages="editForm.errors.name"
+                />
+                <v-text-field
+                    label="Email"
+                    prepend-inner-icon="mdi-email-outline"
+                    v-model="editForm.email"
+                    :error-messages="editForm.errors.email"
+                />
+                <v-select
+                    label="Role"
+                    prepend-inner-icon="mdi-shield-account-outline"
+                    v-model="editForm.role"
+                    :items="roles"
+                    :error-messages="editForm.errors.role"
+                    :item-title="
+                        (item) =>
+                            item.name
+                                .split(' ')
+                                .map(
+                                    (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1)
+                                )
+                                .join(' ')
+                    "
+                    item-value="id"
+                />
+            </v-form>
         </template>
         <!-- Data table slots begin -->
         <template #item.user="{ item }">
@@ -85,6 +157,7 @@ const form = useForm({
         </template>
         <template #item.roles="{ item }">
             <v-chip
+                v-if="item.roles.length > 0"
                 v-for="role in item.roles"
                 :key="role.id"
                 color="primary"
@@ -92,6 +165,7 @@ const form = useForm({
             >
                 {{ role.name }}
             </v-chip>
+            <v-chip v-else color="error" class="mr-2"> Not Assigned </v-chip>
         </template>
         <!-- Data table slots end -->
     </IndexView>
