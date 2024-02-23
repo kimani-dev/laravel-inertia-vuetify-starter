@@ -11,6 +11,11 @@ const props = defineProps({
 
 const headers = [
     {
+        title: "Date and Time",
+        value: "created_at",
+        sortable: true,
+    },
+    {
         title: "User",
         value: "user",
     },
@@ -26,10 +31,6 @@ const headers = [
         title: "IP Address",
         value: "ip_address",
     },
-    {
-        title: "Time",
-        value: "created_at",
-    },
 ];
 </script>
 
@@ -41,6 +42,11 @@ const headers = [
         route-name="logs"
     >
         <!-- Data table slots begin -->
+        <template #item.created_at="{ item }">
+            <p>
+                {{ moment(item.created_at).format("Do MMM YYYY, hh:mm A") }}
+            </p>
+        </template>
         <template #item.user="{ item }">
             <v-list-item
                 :prepend-avatar="item.user.profile_photo_url"
@@ -53,21 +59,10 @@ const headers = [
                 {{ item.action }}
             </v-chip>
         </template>
-        <template #item.created_at="{ item }">
-            <p>
-                <v-icon
-                    icon="mdi-calendar-outline"
-                    class="mr-2"
-                    color="primary"
-                />{{ moment(item.created_at).format("Do MMM YYYY") }}
-            </p>
-            <p>
-                <v-icon
-                    icon="mdi-clock-outline"
-                    class="mr-2"
-                    color="primary"
-                />{{ moment(item.created_at).format("hh:mm A") }}
-            </p>
+        <template #item.ip_address="{ item }">
+            <code class="bg-grey-lighten-2 pa-2 rounded-xl">{{
+                item.ip_address
+            }}</code>
         </template>
         <!-- Data table slots end -->
     </IndexView>

@@ -27,20 +27,17 @@ router.on("finish", () => {
     loading.value = false;
 });
 
-// flash
-const flash = ref({
-    type: null,
-    message: null,
-});
 watch(
     () => usePage().props.flash,
     ({ type, message }) => {
-        toast(message, {
-            theme: "colored",
-            type,
-            transition: "slide",
-            timer: 3000,
-        });
+        if (type && message) {
+            toast(message, {
+                theme: "colored",
+                type,
+                transition: "slide",
+                timer: 3000,
+            });
+        }
     }
 );
 </script>

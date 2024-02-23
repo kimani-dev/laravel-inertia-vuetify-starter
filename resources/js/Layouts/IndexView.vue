@@ -4,6 +4,7 @@ import { ref } from "vue";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useForm } from "@inertiajs/vue3";
+import { useExport } from "@/Composables/useExport";
 
 const props = defineProps({
     title: {
@@ -21,6 +22,13 @@ const props = defineProps({
     routeName: {
         type: String,
         required: true,
+    },
+    // should receive an object with head and body arrays
+    // to be used in the exportPDF function
+    exportable: {
+        type: Object,
+        required: false,
+        default: null,
     },
 });
 
@@ -81,6 +89,20 @@ function deleteItem(item) {
         },
     });
 }
+
+function exportPDF() {
+    // check if exportable is passed and has head and body arrays
+    if (!props.exportable || !props.exportable.head || !props.exportable.body) {
+        console.error(
+            "Exportable object is required and should have head and body arrays"
+        );
+        return;
+    }
+    // use the exportable object to create the pdf
+    const data = props.exportable;
+    data.title = props.title;
+    useExport(data).savePDF();
+}
 </script>
 
 <template>
@@ -127,8 +149,20 @@ function deleteItem(item) {
         </slot>
         <!-- Create item slot end -->
         <slot name="prepend" />
+        <!-- Data table actions start -->
+        <div class="d-flex justify-end">
+            <v-btn prepend-icon="mdi-sort" text="Filter" class="mr-2" />
+            <v-btn
+                prepend-icon="mdi-export"
+                text="Export"
+                :v-if="!!exportable"
+                @click="exportPDF"
+            />
+        </div>
+        <!-- Data table actions end -->
         <!-- Data table for items start -->
         <v-data-table
+            id="data-table"
             class="elevation-3 mt-3"
             :headers="headers"
             :items="items"
@@ -187,5 +221,8 @@ function deleteItem(item) {
             <!-- Actions slot end -->
         </v-data-table>
         <!-- Data table for items end -->
+        <!-- Bottom Slot start -->
+        <slot name="bottom" />
+        <!-- Bottom Slot end -->
     </AppLayout>
 </template>

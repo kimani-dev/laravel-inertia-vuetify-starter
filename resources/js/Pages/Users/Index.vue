@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import IndexView from "@/Layouts/IndexView.vue";
 
@@ -49,6 +50,18 @@ function createUser(closeDialog) {
 function reloadData() {
     router.reload({ only: ["users"] });
 }
+
+// exportable data
+const exportable = computed(() => ({
+    head: ["Name", "Email", "Role"],
+    body: props.users.map((user, index) => [
+        user.name,
+        user.email,
+        user.roles.length > 0
+            ? user.roles.map((role) => role.name).join(", ")
+            : "Not Assigned",
+    ]),
+}));
 </script>
 
 <template>
@@ -57,26 +70,11 @@ function reloadData() {
         :headers="headers"
         :items="users"
         route-name="users"
+        :exportable="exportable"
         @create="(close) => createUser(close)"
         @edit="reloadData"
         @delete="reloadData"
     >
-        <template #prepend>
-            <div class="d-flex justify-space-between">
-                <div>
-                    <v-btn
-                        prepend-icon="mdi-sort"
-                        variant="text"
-                        text="Sort Users"
-                    />
-                    <v-btn
-                        prepend-icon="mdi-export"
-                        variant="text"
-                        text="Export Users"
-                    />
-                </div>
-            </div>
-        </template>
         <template #create-content>
             <v-form @submit.prevent>
                 <v-text-field
@@ -168,5 +166,6 @@ function reloadData() {
             <v-chip v-else color="error" class="mr-2"> Not Assigned </v-chip>
         </template>
         <!-- Data table slots end -->
+        <template #bottom> </template>
     </IndexView>
 </template>

@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
                     'role' => $request->user()->getRoleNames(),
                     'profile_photo_path' => $request->user()->profile_photo_path,
                     'profile_photo_url' => $request->user()->profile_photo_url,
+                    'two_factor_enabled' => ! is_null($request->user()->two_factor_secret),
                     'permissions' => $request->user()->getAllPermissions()->pluck('name'),
                     'notifications' => $request->user()->notifications,
                 ] : null,

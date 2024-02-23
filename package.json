@@ -20,6 +20,9 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "html2canvas": "^1.4.1",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.8.2",
         "moment": "^2.30.1",
         "sass": "^1.70.0",
         "sweetalert2": "^11.10.4",
