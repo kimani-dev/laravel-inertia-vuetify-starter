@@ -106,15 +106,12 @@ const disableTwoFactorAuthentication = () => {
 </script>
 
 <template>
-    <v-container fluid>
-        <v-card>
-            <v-card-title>
-                <p class="text-h5">Two Factor Authentication</p>
-                <p class="text-subtitle-2">
-                    Add additional security to your account using two factor
-                    authentication.
-                </p>
-            </v-card-title>
+    <v-container fluid class="pa-0 pa-md-2">
+        <v-card
+            title="Two Factor Authentication"
+            subtitle="Add additional security to your account using two factor
+                    authentication."
+        >
             <v-card-text>
                 <p
                     class="text-subtitle-1 font-weight-bold"

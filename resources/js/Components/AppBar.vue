@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { useTheme } from "vuetify";
+import { useTheme, useDisplay } from "vuetify";
 import { router, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 
@@ -8,6 +8,13 @@ import SideBar from "./SideBar.vue";
 
 //user
 const user = ref(usePage().props.auth.user);
+
+// drawer
+const { mobile } = useDisplay();
+const drawer = ref(!mobile.value);
+function toggleDrawer() {
+    drawer.value = !drawer.value;
+}
 
 // logout
 const logout = () => {
@@ -43,11 +50,11 @@ const unreadNotifications = computed(() => {
 </script>
 
 <template>
-    <SideBar />
+    <SideBar :drawer="drawer" @closed="drawer = false" />
     <v-app-bar title="Laravel Starter Kit">
         <div class="h-100 w-100 d-flex align-center justify-space-between">
             <div class="d-flex">
-                <v-icon icon="mdi-menu" class="my-auto" />
+                <v-icon icon="mdi-menu" class="my-auto" @click="toggleDrawer" />
                 <p class="text-h5 ml-2 text-primary">Laravel</p>
             </div>
             <div class="d-flex">

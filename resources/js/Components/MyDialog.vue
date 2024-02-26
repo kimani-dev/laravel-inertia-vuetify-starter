@@ -38,11 +38,12 @@ watchEffect(() => {
             </slot>
         </template>
         <template #default>
-            <v-card width="50%" class="mx-auto">
-                <v-card-title>
-                    <p class="text-h5 text-capitalize">{{ title }}</p>
-                    <p class="text-caption text-capitalize">{{ subtitle }}</p>
-                </v-card-title>
+            <v-card
+                :width="$vuetify.display.mobile ? '100%' : '50%'"
+                class="mx-auto"
+                :title="title"
+                :subtitle="subtitle"
+            >
                 <v-card-text>
                     <slot name="content" />
                 </v-card-text>

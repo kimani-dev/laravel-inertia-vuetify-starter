@@ -55,8 +55,7 @@ const closeModal = () => {
     </v-container>
 
     <v-dialog v-model="confirmingUserDeletion" :persistent="form.processing">
-        <v-card class="mx-auto" width="500">
-            <v-card-title>Delete Account</v-card-title>
+        <v-card class="mx-auto" width="500" title="Delete Account">
             <v-card-text>
                 <p class="text-subtitle-2">
                     Are you sure you want to delete your account? Once your

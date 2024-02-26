@@ -1,8 +1,16 @@
 <script setup>
 import { ref } from "vue";
 import { router } from "@inertiajs/vue3";
+import { useDisplay } from "vuetify";
 
-const drawer = ref(true);
+const props = defineProps({
+    drawer: {
+        type: Boolean,
+        required: false,
+    },
+});
+
+const { mobile } = useDisplay();
 
 function logout() {
     router.post(route("logout"));
@@ -30,7 +38,12 @@ setInterval(updateTime, 1000);
 </script>
 
 <template>
-    <v-navigation-drawer v-model="drawer" name="drawer" permanent>
+    <v-navigation-drawer
+        :model-value="drawer"
+        name="drawer"
+        :permanent="!mobile"
+        @update:model-value="($event) => !$event && $emit('closed')"
+    >
         <v-list class="pa-2">
             <div class="pa-2 bg-primary rounded-lg d-flex justify-center">
                 <div class="d-flex">

@@ -45,7 +45,7 @@ watch(
 <template>
     <div>
         <Head :title="title" />
-        <v-container fluid>
+        <v-container fluid class="pa-0 pa-md-2">
             <v-overlay
                 :model-value="loading"
                 class="align-center justify-center"

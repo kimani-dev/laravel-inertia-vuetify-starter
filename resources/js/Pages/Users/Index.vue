@@ -19,10 +19,12 @@ const headers = [
     {
         title: "User",
         value: "user",
+        sortable: true,
     },
     {
         title: "Role",
         value: "roles",
+        sortable: true,
     },
     {
         title: "Actions",

@@ -34,5 +34,7 @@ export default createVuetify({
         VTextarea: { variant: "outlined", rounded: "lg", color: "primary" },
         VSlider: { color: "primary" },
         VFileInput: { color: "primary", rounded: "lg", variant: "outlined" },
+        //container
+        VContainer: { class: "pa-1 pa-md-0" },
     },
 });

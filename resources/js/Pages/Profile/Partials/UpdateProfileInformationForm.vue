@@ -70,17 +70,14 @@ const clearPhotoFileInput = () => {
 </script>
 
 <template>
-    <v-container>
+    <v-container fluid class="pa-0 pa-md-2">
         <v-row>
             <v-col>
-                <v-card>
-                    <v-card-title>
-                        <p class="text-h5">Profile Information</p>
-                        <p class="text-subtitle-2">
-                            Update your account's profile information and email
-                            address.
-                        </p>
-                    </v-card-title>
+                <v-card
+                    title="Profile Information"
+                    subtitle="Update your account's profile information and email
+                            address."
+                >
                     <v-card-text>
                         <v-form @submit.prevent="updateProfileInformation">
                             <div

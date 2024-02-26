@@ -74,7 +74,7 @@ const closeModal = () => {
         </span>
 
         <v-dialog v-model="confirmingPassword" :persistent="form.processing">
-            <v-card width="500" class="mx-auto">
+            <v-card width="500" class="mx-auto" :title="title" subtitle="Confirm password to continue">
                 <v-card-title>{{ title }}</v-card-title>
                 <v-card-text>
                     {{ content }}

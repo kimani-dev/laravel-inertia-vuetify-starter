@@ -32,17 +32,14 @@ const updatePassword = () => {
 </script>
 
 <template>
-    <v-container>
+    <v-container fluid class="pa-0 pa-md-2">
         <v-row>
             <v-col>
-                <v-card>
-                    <v-card-title>
-                        <p class="text-h5">Update Password</p>
-                        <p class="text-subtitle-2">
-                            Ensure your account is using a long, random password
-                            to stay secure.
-                        </p>
-                    </v-card-title>
+                <v-card
+                    title="Update Password"
+                    subtitle="Ensure your account is using a long, random password
+                            to stay secure."
+                >
                     <v-card-text>
                         <v-form @submit.prevent="updatePassword">
                             <v-text-field

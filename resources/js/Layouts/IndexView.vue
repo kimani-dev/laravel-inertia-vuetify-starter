@@ -30,6 +30,12 @@ const props = defineProps({
         required: false,
         default: null,
     },
+    // rows to use to search and filter
+    filterKeys: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 });
 
 const emit = defineEmits(["create", "edit", "delete", "selected"]);
@@ -41,6 +47,29 @@ const headersWithoutActions = props.headers.filter(
 // search and filter
 const search = ref("");
 const selected = ref([]);
+
+function customFilter(value, query, item) {
+    if (query === "") return true;
+    if (value === null) return false;
+
+    if (props.filterKeys.length === 0) {
+        return JSON.stringify(item.raw)
+            .toLowerCase()
+            .includes(query.toLowerCase());
+    }
+
+    for (const key of props.filterKeys) {
+        const itemValue = item.raw[key];
+        if (
+            itemValue &&
+            itemValue.toString().toLowerCase().includes(query.toLowerCase())
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 // editing
 const editForm = useForm({});
@@ -107,9 +136,9 @@ function exportPDF() {
 
 <template>
     <AppLayout :title="title">
-        <div class="d-flex justify-space-between">
+        <div class="d-flex justify-space-between flex-column flex-md-row">
             <h1 class="text-h5 mt-4">{{ title }}</h1>
-            <v-col cols="4" align-self="center">
+            <v-col cols="12" md="4" align-self="center">
                 <v-text-field
                     label="Search"
                     prepend-inner-icon="mdi-magnify"
@@ -118,7 +147,7 @@ function exportPDF() {
                 />
             </v-col>
         </div>
-        <div class="mt-3 d-flex" />
+        <div class="mt-3" />
         <!-- Create item slot start -->
         <slot name="create">
             <my-dialog
@@ -150,8 +179,26 @@ function exportPDF() {
         <!-- Create item slot end -->
         <slot name="prepend" />
         <!-- Data table actions start -->
-        <div class="d-flex justify-end">
-            <v-btn prepend-icon="mdi-sort" text="Filter" class="mr-2" />
+        <div class="d-flex justify-md-end mt-2">
+            <v-menu :close-on-content-click="false">
+                <template #activator="{ props }">
+                    <v-btn
+                        v-bind="props"
+                        prepend-icon="mdi-sort"
+                        text="Filter"
+                        class="mr-2"
+                    />
+                </template>
+                <v-list>
+                    <v-list-subheader>Filter Items</v-list-subheader>
+                    <v-chip-group filter mandatory="force">
+                        <div class="d-flex flex-column w-100">
+                            <v-chip active-class="text-primary">All</v-chip>
+                            <v-chip>Role</v-chip>
+                        </div>
+                    </v-chip-group>
+                </v-list>
+            </v-menu>
             <v-btn
                 prepend-icon="mdi-export"
                 text="Export"
@@ -167,6 +214,7 @@ function exportPDF() {
             :headers="headers"
             :items="items"
             :search="search"
+            :custom-filter="customFilter"
             show-select
             color="primary"
             v-model="selected"

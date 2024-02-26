@@ -92,33 +92,38 @@ const closeModal = () => {
     </v-container>
 
     <v-dialog v-model="confirmingLogout" :persistent="form.processing">
-        <v-card width="500" class="mx-auto">
-            <v-card-title>Log Out Other Browser Sessions</v-card-title>
-            <v-card-text>
-                <p class="text-subtitle-1">
-                    Please enter your password to confirm you would like to log
-                    out of your other browser sessions across all of your
-                    devices.
-                </p>
-                <v-text-field
-                    ref="passwordInput"
-                    class="mt-2"
-                    label="Password"
-                    v-model="form.password"
-                    :error-messages="form.errors.password"
-                    @keyup.enter="logoutOtherBrowserSessions"
-                />
-                <div class="d-flex justify-space-between">
-                    <v-btn @click="closeModal" :disabled="form.processing"
-                        >Cancel</v-btn
-                    >
-                    <v-btn
-                        :loading="form.processing"
-                        @click="logoutOtherBrowserSessions"
-                        >Confirm</v-btn
-                    >
-                </div>
-            </v-card-text>
-        </v-card>
+        <v-row justify="center">
+            <v-col cols="12" md="6">
+                <v-card class="mx-auto" title="Log Out Other Browser Sessions">
+                    <v-card-text>
+                        <p class="text-subtitle-1">
+                            Please enter your password to confirm you would like
+                            to log out of your other browser sessions across all
+                            of your devices.
+                        </p>
+                        <v-text-field
+                            ref="passwordInput"
+                            class="mt-2"
+                            label="Password"
+                            v-model="form.password"
+                            :error-messages="form.errors.password"
+                            @keyup.enter="logoutOtherBrowserSessions"
+                        />
+                        <div class="d-flex justify-space-between">
+                            <v-btn
+                                @click="closeModal"
+                                :disabled="form.processing"
+                                >Cancel</v-btn
+                            >
+                            <v-btn
+                                :loading="form.processing"
+                                @click="logoutOtherBrowserSessions"
+                                >Confirm</v-btn
+                            >
+                        </div>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
     </v-dialog>
 </template>
