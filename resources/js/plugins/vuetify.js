@@ -36,5 +36,7 @@ export default createVuetify({
         VFileInput: { color: "primary", rounded: "lg", variant: "outlined" },
         //container
         VContainer: { class: "pa-1 pa-md-0" },
+        // icons
+        VIcon: { color: "primary" },
     },
 });
