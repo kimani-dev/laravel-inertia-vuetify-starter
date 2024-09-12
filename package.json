@@ -26,9 +26,9 @@
         "jspdf-autotable": "^3.8.2",
         "moment": "^2.30.1",
         "sass": "^1.70.0",
-        "sweetalert2": "^11.10.4",
+        "sweetalert2": "^11.6.13",
         "vite-plugin-vuetify": "^2.0.1",
         "vue3-toastify": "^0.2.1",
-        "vuetify": "^3.5.1"
+        "vuetify": "^3.7.1"
     }
 }

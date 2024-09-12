@@ -25,7 +25,11 @@ export default createVuetify({
     },
     // Setup defaults for components globaly
     defaults: {
-        VBtn: { color: "primary", class: "text-capitalize" },
+        VBtn: {
+            color: "primary",
+            class: "text-capitalize",
+            VIcon: { color: "white" },
+        },
         VCard: { rounded: "lg" },
         // form items
         VCheckbox: { color: "primary" },

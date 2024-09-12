@@ -47,7 +47,7 @@ function createRole(closeModal) {
         @create="(close) => createRole(close)"
         @delete="router.reload({ only: ['roles'] })"
     >
-        <!-- Create form content slot start -->
+        <!-- Create form content slot -->
         <template #create-content>
             <v-form :disabled="form.processing" @submit.prevent>
                 <v-text-field
@@ -58,8 +58,8 @@ function createRole(closeModal) {
                 />
             </v-form>
         </template>
-        <!-- Create form content slot end -->
-        <!-- Edit form content start -->
+
+        <!-- Edit form content -->
         <template #edit-content="{ editForm }">
             <v-form :disabled="form.processing" @submit.prevent>
                 <v-text-field
@@ -70,32 +70,12 @@ function createRole(closeModal) {
                 />
             </v-form>
         </template>
-        <!-- Edit form content end -->
-        <!-- Data table item slots start -->
+
+        <!-- Data table item slots -->
         <template #item.name="{ item }">
-            <p class="text-capitalize">{{ item.name }}</p>
+            <base-link :href="route('roles.show', item)">
+                <p class="text-capitalize">{{ item.name }}</p>
+            </base-link>
         </template>
-        <!-- Data table item slots end -->
-        <!-- Append actions slot start -->
-        <template #append-actions="{ item }">
-            <v-menu>
-                <template #activator="{ props }">
-                    <v-icon
-                        v-bind="props"
-                        icon="mdi-dots-vertical"
-                        class="ml-2"
-                    />
-                </template>
-                <v-list>
-                    <v-list-item
-                        v-use-inertia-link
-                        :href="route('roles.show', item)"
-                        prepend-icon="mdi-shield-account-outline"
-                        title="Manage Permissions"
-                    />
-                </v-list>
-            </v-menu>
-        </template>
-        <!-- Append actions slot end -->
     </IndexView>
 </template>
