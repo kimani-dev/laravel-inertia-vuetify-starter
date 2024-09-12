@@ -1,13 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import IndexView from "@/Layouts/IndexView.vue";
+import Log from "@/types/Log";
 import moment from "moment";
 
-const props = defineProps({
-    logs: {
-        type: Array,
-        required: true,
-    },
-});
+defineProps<{
+    logs: Log[];
+}>();
 
 const headers = [
     {

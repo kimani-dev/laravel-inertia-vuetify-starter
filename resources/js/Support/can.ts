@@ -1,10 +1,10 @@
 import { usePage } from "@inertiajs/vue3";
 
 export const Can = {
-    install: (v) => {
-        const page = usePage();
+    install: (v: any) => {
+        const page: any = usePage();
 
-        const can = (permission) => {
+        const can = (permission: string) => {
             return page.props.auth.user.permissions.includes(permission);
         };
 

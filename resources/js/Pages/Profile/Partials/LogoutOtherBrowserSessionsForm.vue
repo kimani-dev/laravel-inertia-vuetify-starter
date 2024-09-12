@@ -1,38 +1,38 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { Ref, ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
-defineProps({
-    sessions: Array,
-});
+import Session from "@/types/Session";
+
+defineProps<{
+    sessions: Session[];
+}>();
 
 const confirmingLogout = ref(false);
-const passwordInput = ref(null);
+const passwordInput: Ref<HTMLInputElement | null> = ref(null);
 
 const form = useForm({
     password: "",
 });
 
-const confirmLogout = () => {
+function confirmLogout() {
     confirmingLogout.value = true;
+    setTimeout(() => passwordInput?.value?.focus(), 250);
+}
 
-    setTimeout(() => passwordInput.value.focus(), 250);
-};
-
-const logoutOtherBrowserSessions = () => {
+function logoutOtherBrowserSessions() {
     form.delete(route("other-browser-sessions.destroy"), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
+        onError: () => passwordInput?.value?.focus(),
         onFinish: () => form.reset(),
     });
-};
+}
 
-const closeModal = () => {
+function closeModal() {
     confirmingLogout.value = false;
-
     form.reset();
-};
+}
 </script>
 
 <template>

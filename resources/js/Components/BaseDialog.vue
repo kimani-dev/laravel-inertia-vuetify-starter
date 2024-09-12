@@ -1,22 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { watchEffect } from "vue";
 import { ref } from "vue";
 
-const props = defineProps({
-    title: {
-        type: String,
-        required: true,
-    },
-    subtitle: {
-        type: String,
-        required: false,
-    },
-    showDialog: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
-});
+const props = defineProps<{
+    title: string;
+    subtitle?: string;
+    showDialog?: boolean;
+}>();
 
 const emit = defineEmits(["closed"]);
 

@@ -1,14 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { router, useForm } from "@inertiajs/vue3";
 
 import IndexView from "@/Layouts/IndexView.vue";
+import Role from "@/types/Role";
 
-const props = defineProps({
-    roles: {
-        type: Array,
-        required: true,
-    },
-});
+defineProps<{
+    roles: Role[];
+}>();
 
 const headers = [
     {
@@ -26,7 +24,7 @@ const form = useForm({
     name: "",
 });
 
-function createRole(closeModal) {
+function createRole(closeModal: Function) {
     form.post(route("roles.store"), {
         preserveScroll: true,
         onSuccess: () => {

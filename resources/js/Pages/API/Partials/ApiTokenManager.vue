@@ -1,13 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 
-const props = defineProps({
-    tokens: Array,
-    availablePermissions: Array,
-    defaultPermissions: Array,
-});
+interface Token {
+    name: string;
+    last_used_ago: string;
+    abilities: Array<string>;
+}
+
+const props = defineProps<{
+    tokens: Token[];
+    availablePermissions: string[];
+    defaultPermissions: string[];
+}>();
 
 const headers = [
     {
@@ -49,7 +55,9 @@ const createApiToken = () => {
 };
 
 function copyToken() {
-    navigator.clipboard.writeText(usePage().props.jetstream.flash.token);
+    navigator.clipboard.writeText(
+        (usePage() as any).props.jetstream.flash.token
+    );
     Swal.fire({
         title: "Token Copied to Clipboard",
         icon: "success",
@@ -63,12 +71,12 @@ function copyToken() {
     });
 }
 
-const manageApiTokenPermissions = (token) => {
+function manageApiTokenPermissions(token: any) {
     updateApiTokenForm.permissions = token.abilities;
     managingPermissionsFor.value = token;
-};
+}
 
-const updateApiToken = () => {
+function updateApiToken() {
     updateApiTokenForm.put(
         route("api-tokens.update", managingPermissionsFor.value),
         {
@@ -77,9 +85,9 @@ const updateApiToken = () => {
             onSuccess: () => (managingPermissionsFor.value = null),
         }
     );
-};
+}
 
-const deleteApiToken = (token) => {
+function deleteApiToken(token: Token) {
     Swal.fire({
         title: "Are you sure?",
         text: "This API token will be permanently deleted.",
@@ -95,14 +103,14 @@ const deleteApiToken = (token) => {
                     onError: () => {
                         reject();
                     },
-                    onSuccess: () => {
-                        resolve();
+                    onSuccess: (page) => {
+                        resolve(page);
                     },
                 });
             });
         },
     });
-};
+}
 </script>
 
 <template>
@@ -186,7 +194,9 @@ const deleteApiToken = (token) => {
                                 security, it won't be shown again.
                             </p>
                             <code class="bg-grey-lighten-2 pa-2 rounded-lg"
-                                >{{ $page.props.jetstream.flash.token }}
+                                >{{
+                                    ($page as any).props.jetstream.flash.token
+                                }}
                                 <v-icon
                                     icon="mdi-content-copy"
                                     @click="copyToken"

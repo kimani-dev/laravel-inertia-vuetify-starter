@@ -1,22 +1,21 @@
-<script setup>
-import { ref, reactive, nextTick } from "vue";
+<script setup lang="ts">
+import { ref, reactive, nextTick, Ref } from "vue";
+import axios from "axios";
 
 const emit = defineEmits(["confirmed"]);
 
-defineProps({
-    title: {
-        type: String,
-        default: "Confirm Password",
-    },
-    content: {
-        type: String,
-        default: "For your security, please confirm your password to continue.",
-    },
-    button: {
-        type: String,
-        default: "Confirm",
-    },
-});
+withDefaults(
+    defineProps<{
+        title: string;
+        content: string;
+        button: string;
+    }>(),
+    {
+        title: "Confirm Password",
+        content: "For your security, please confirm your password to continue.",
+        button: "Confirm",
+    }
+);
 
 const confirmingPassword = ref(false);
 
@@ -26,7 +25,7 @@ const form = reactive({
     processing: false,
 });
 
-const passwordInput = ref(null);
+const passwordInput: Ref<HTMLInputElement | null> = ref(null);
 
 const startConfirmingPassword = () => {
     axios.get(route("password.confirmation")).then((response) => {
@@ -35,12 +34,12 @@ const startConfirmingPassword = () => {
         } else {
             confirmingPassword.value = true;
 
-            setTimeout(() => passwordInput.value.focus(), 250);
+            setTimeout(() => passwordInput?.value?.focus(), 250);
         }
     });
 };
 
-const confirmPassword = () => {
+function confirmPassword() {
     form.processing = true;
 
     axios
@@ -56,15 +55,15 @@ const confirmPassword = () => {
         .catch((error) => {
             form.processing = false;
             form.error = error.response.data.errors.password[0];
-            passwordInput.value.focus();
+            passwordInput?.value?.focus();
         });
-};
+}
 
-const closeModal = () => {
+function closeModal() {
     confirmingPassword.value = false;
     form.password = "";
     form.error = "";
-};
+}
 </script>
 
 <template>
@@ -74,7 +73,12 @@ const closeModal = () => {
         </span>
 
         <v-dialog v-model="confirmingPassword" :persistent="form.processing">
-            <v-card width="500" class="mx-auto" :title="title" subtitle="Confirm password to continue">
+            <v-card
+                width="500"
+                class="mx-auto"
+                :title="title"
+                subtitle="Confirm password to continue"
+            >
                 <v-card-title>{{ title }}</v-card-title>
                 <v-card-text>
                     {{ content }}

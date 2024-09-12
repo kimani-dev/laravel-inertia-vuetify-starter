@@ -1,25 +1,26 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { Ref, ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
+import User from "@/types/User";
 
-const props = defineProps({
-    user: Object,
-});
+const props = defineProps<{
+    user: User;
+}>();
 
 const form = useForm({
     _method: "PUT",
     name: props.user.name,
     email: props.user.email,
-    photo: null,
+    photo: null as File | null,
 });
 
-const verificationLinkSent = ref(null);
-const photoPreview = ref(null);
-const photoInput = ref(null);
+const verificationLinkSent = ref(false);
+const photoPreview: any = ref(null);
+const photoInput: Ref<HTMLInputElement | null> = ref(null);
 
 const updateProfileInformation = () => {
     if (photoInput.value) {
-        form.photo = photoInput.value.files[0];
+        form.photo = photoInput?.value?.files?.[0] ?? null;
     }
 
     form.post(route("user-profile-information.update"), {
@@ -29,30 +30,30 @@ const updateProfileInformation = () => {
     });
 };
 
-const sendEmailVerification = () => {
+function sendEmailVerification() {
     verificationLinkSent.value = true;
     router.post(route("verification.send"));
-};
+}
 
-const selectNewPhoto = () => {
-    photoInput.value.click();
-};
+function selectNewPhoto() {
+    photoInput?.value?.click();
+}
 
-const updatePhotoPreview = () => {
-    const photo = photoInput.value.files[0];
+function updatePhotoPreview() {
+    const photo = photoInput?.value?.files?.[0];
 
     if (!photo) return;
 
     const reader = new FileReader();
 
     reader.onload = (e) => {
-        photoPreview.value = e.target.result;
+        photoPreview.value = e?.target?.result;
     };
 
     reader.readAsDataURL(photo);
-};
+}
 
-const deletePhoto = () => {
+function deletePhoto() {
     router.delete(route("current-user-photo.destroy"), {
         preserveScroll: true,
         onSuccess: () => {
@@ -60,13 +61,13 @@ const deletePhoto = () => {
             clearPhotoFileInput();
         },
     });
-};
+}
 
-const clearPhotoFileInput = () => {
-    if (photoInput.value?.value) {
-        photoInput.value.value = null;
+function clearPhotoFileInput() {
+    if (photoInput.value) {
+        photoInput.value = null;
     }
-};
+}
 </script>
 
 <template>
@@ -82,7 +83,7 @@ const clearPhotoFileInput = () => {
                         <v-form @submit.prevent="updateProfileInformation">
                             <div
                                 v-if="
-                                    $page.props.jetstream.managesProfilePhotos
+                                    ($page as any).props.jetstream.managesProfilePhotos
                                 "
                             >
                                 <v-avatar
@@ -127,7 +128,7 @@ const clearPhotoFileInput = () => {
                             />
                             <div
                                 v-if="
-                                    $page.props.jetstream
+                                    ($page as any).props.jetstream
                                         .hasEmailVerification &&
                                     user.email_verified_at === null
                                 "

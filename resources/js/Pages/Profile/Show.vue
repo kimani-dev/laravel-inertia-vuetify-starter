@@ -1,4 +1,5 @@
-<script setup>
+<script setup lang="ts">
+import { usePage } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import DeleteUserForm from "@/Pages/Profile/Partials/DeleteUserForm.vue";
 import LogoutOtherBrowserSessionsForm from "@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue";
@@ -6,10 +7,12 @@ import TwoFactorAuthenticationForm from "@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from "@/Pages/Profile/Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "@/Pages/Profile/Partials/UpdateProfileInformationForm.vue";
 
-defineProps({
-    confirmsTwoFactorAuthentication: Boolean,
-    sessions: Array,
-});
+defineProps<{
+    confirmsTwoFactorAuthentication: boolean;
+    sessions: any[];
+}>();
+
+const page: any = usePage();
 </script>
 
 <template>
@@ -20,23 +23,22 @@ defineProps({
                     <div class="mt-3">
                         <div
                             v-if="
-                                $page.props.jetstream
-                                    .canUpdateProfileInformation
+                                page.props.jetstream.canUpdateProfileInformation
                             "
                         >
                             <UpdateProfileInformationForm
-                                :user="$page.props.auth.user"
+                                :user="page.props.auth.user"
                             />
                         </div>
                     </div>
 
-                    <div v-if="$page.props.jetstream.canUpdatePassword">
+                    <div v-if="page.props.jetstream.canUpdatePassword">
                         <UpdatePasswordForm />
                     </div>
 
                     <div
                         v-if="
-                            $page.props.jetstream
+                            page.props.jetstream
                                 .canManageTwoFactorAuthentication
                         "
                     >
@@ -50,7 +52,7 @@ defineProps({
                     <LogoutOtherBrowserSessionsForm :sessions="sessions" />
 
                     <template
-                        v-if="$page.props.jetstream.hasAccountDeletionFeatures"
+                        v-if="page.props.jetstream.hasAccountDeletionFeatures"
                     >
                         <DeleteUserForm />
                     </template>

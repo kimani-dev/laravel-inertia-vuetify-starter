@@ -1,42 +1,21 @@
-<script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+<script setup lang="ts">
 import { ref } from "vue";
-import Swal from "sweetalert2";
-import axios from "axios";
 import { useForm } from "@inertiajs/vue3";
 import { useExport } from "@/Composables/useExport";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-const props = defineProps({
-    title: {
-        type: String,
-        required: true,
-    },
-    headers: {
-        type: Array,
-        required: true,
-    },
-    items: {
-        type: Array,
-        required: true,
-    },
-    routeName: {
-        type: String,
-        required: true,
-    },
-    // should receive an object with head and body arrays
-    // to be used in the exportPDF function
-    exportable: {
-        type: Object,
-        required: false,
-        default: null,
-    },
-    // rows to use to search and filter
-    filterKeys: {
-        type: Array,
-        required: false,
-        default: () => [],
-    },
-});
+import AppLayout from "@/Layouts/AppLayout.vue";
+import Exportable from "@/types/Exportable";
+
+const props = defineProps<{
+    title: string;
+    headers: { title: string; value: string }[];
+    items: any[];
+    routeName: string;
+    exportable?: Exportable;
+    filterKeys?: Array<string>;
+}>();
 
 const emit = defineEmits(["create", "edit", "delete", "selected"]);
 
@@ -48,39 +27,17 @@ const headersWithoutActions = props.headers.filter(
 const search = ref("");
 const selected = ref([]);
 
-function customFilter(value, query, item) {
-    if (query === "") return true;
-    if (value === null) return false;
-
-    if (props.filterKeys.length === 0) {
-        return JSON.stringify(item.raw)
-            .toLowerCase()
-            .includes(query.toLowerCase());
-    }
-
-    for (const key of props.filterKeys) {
-        const itemValue = item.raw[key];
-        if (
-            itemValue &&
-            itemValue.toString().toLowerCase().includes(query.toLowerCase())
-        ) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 // editing
-const editForm = useForm({});
-function selectItemToEdit(item) {
+const editForm = useForm<any>({});
+function selectItemToEdit(item: any) {
     editForm
         .defaults({
             ...item,
         })
         .reset();
 }
-function editItem(closeDialog) {
+
+function editItem(closeDialog: Function) {
     editForm.put(route(`${props.routeName}.update`, editForm.id), {
         onError: () => {
             Swal.fire("Error!", "Update Failed!", "error");
@@ -93,7 +50,7 @@ function editItem(closeDialog) {
 }
 
 // deletions
-function deleteItem(item) {
+function deleteItem(item: any) {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -127,8 +84,9 @@ function exportPDF() {
         );
         return;
     }
+
     // use the exportable object to create the pdf
-    const data = props.exportable;
+    const data: Exportable = props.exportable;
     data.title = props.title;
     useExport(data).savePDF();
 }
@@ -218,7 +176,6 @@ function exportPDF() {
                 :headers="headers"
                 :items="items"
                 :search="search"
-                :custom-filter="customFilter"
                 show-select
                 color="primary"
                 v-model="selected"

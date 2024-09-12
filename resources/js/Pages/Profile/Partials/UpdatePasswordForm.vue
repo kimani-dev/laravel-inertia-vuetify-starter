@@ -1,9 +1,9 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { Ref, ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
-const passwordInput = ref(null);
-const currentPasswordInput = ref(null);
+const passwordInput: Ref<HTMLInputElement | null> = ref(null);
+const currentPasswordInput: Ref<HTMLInputElement | null> = ref(null);
 
 const form = useForm({
     current_password: "",
@@ -11,7 +11,7 @@ const form = useForm({
     password_confirmation: "",
 });
 
-const updatePassword = () => {
+function updatePassword() {
     form.put(route("user-password.update"), {
         errorBag: "updatePassword",
         preserveScroll: true,
@@ -19,16 +19,16 @@ const updatePassword = () => {
         onError: () => {
             if (form.errors.password) {
                 form.reset("password", "password_confirmation");
-                passwordInput.value.focus();
+                passwordInput?.value?.focus();
             }
 
             if (form.errors.current_password) {
                 form.reset("current_password");
-                currentPasswordInput.value.focus();
+                currentPasswordInput?.value?.focus();
             }
         },
     });
-};
+}
 </script>
 
 <template>

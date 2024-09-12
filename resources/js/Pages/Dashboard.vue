@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { computed } from "vue";
 
@@ -16,7 +16,13 @@ const greeting = computed(() => {
         <v-container fluid>
             <v-row>
                 <v-col>
-                    <h1 class="text-h5">{{ `${greeting}, ${$page.props.auth.user.name}` }}</h1>
+                    <h1 class="text-h5">
+                        {{
+                            `${greeting}, ${
+                                ($page.props.auth as any).user.name
+                            }`
+                        }}
+                    </h1>
                 </v-col>
             </v-row>
         </v-container>

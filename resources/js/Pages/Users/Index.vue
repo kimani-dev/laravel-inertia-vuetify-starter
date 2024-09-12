@@ -1,30 +1,25 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import IndexView from "@/Layouts/IndexView.vue";
+import User from "@/types/User";
+import Role from "@/types/Role";
+import Exportable from "@/types/Exportable";
 
 //props
-const props = defineProps({
-    users: {
-        type: Array,
-        required: true,
-    },
-    roles: {
-        type: Array,
-        required: true,
-    },
-});
+const props = defineProps<{
+    users: User[];
+    roles: Role[];
+}>();
 
 const headers = [
     {
         title: "User",
         value: "user",
-        sortable: true,
     },
     {
         title: "Role",
         value: "roles",
-        sortable: true,
     },
     {
         title: "Actions",
@@ -39,7 +34,7 @@ const form = useForm({
     role: null,
 });
 
-function createUser(closeDialog) {
+function createUser(closeDialog: Function) {
     form.post(route("users.store"), {
         onSuccess: () => {
             form.reset();
@@ -54,9 +49,9 @@ function reloadData() {
 }
 
 // exportable data
-const exportable = computed(() => ({
+const exportable = computed<Exportable>(() => ({
     head: ["Name", "Email", "Role"],
-    body: props.users.map((user, index) => [
+    body: props.users.map((user) => [
         user.name,
         user.email,
         user.roles.length > 0

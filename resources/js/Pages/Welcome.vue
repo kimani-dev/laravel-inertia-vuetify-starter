@@ -1,13 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { Head } from "@inertiajs/vue3";
 import gsap from "gsap";
 
-defineProps({
-    canLogin: Boolean,
-    canRegister: Boolean,
-    laravelVersion: String,
-    phpVersion: String,
-});
+defineProps<{
+    canLogin: boolean;
+    canRegister: boolean;
+    laravelVersion: string;
+    phpVersion: string;
+}>();
 
 const features = [
     {
@@ -37,7 +37,7 @@ const features = [
 ];
 
 // transition with stagger effect
-function onEnter(el, done) {
+function onEnter(el: any, done: any) {
     gsap.from(el, {
         duration: 1,
         opacity: 0,
@@ -99,7 +99,7 @@ function onEnter(el, done) {
 
         <!-- Features start -->
         <v-row justify="center" class="mt-10">
-            <TransitionGroup :css="false" @enter="onEnter" appear="">
+            <TransitionGroup :css="false" @enter="onEnter" appear>
                 <v-col
                     cols="12"
                     md="5"

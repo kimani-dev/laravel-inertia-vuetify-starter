@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { Head, useForm } from "@inertiajs/vue3";
 
-const props = defineProps({
-    email: String,
-    token: String,
-});
+const props = defineProps<{
+    token: string;
+    email: string;
+}>();
 
 const form = useForm({
     token: props.token,

@@ -1,38 +1,45 @@
-<script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
-
+<script setup lang="ts">
 import { computed } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 
-const props = defineProps({
-    role: {
-        type: Object,
-        required: true,
-    },
-    permissions: {
-        type: Array,
-        required: true,
-    },
-});
+import AppLayout from "@/Layouts/AppLayout.vue";
+
+import Role from "@/types/Role";
+import Permission from "@/types/Permission";
+
+const props = defineProps<{
+    role: Role;
+    permissions: Permission[];
+}>();
 
 // group permissions by resource
-const groupedPermissions = computed(() => {
-    return props.permissions.reduce((acc, permission) => {
-        if (!acc[permission.name.split(" ")[1]]) {
-            acc[permission.name.split(" ")[1]] = [];
-        }
+const groupedPermissions = computed(() =>
+    props.permissions.reduce(
+        (acc: { [key: string]: Permission[] }, permission) => {
+            if (!acc[permission.name.split(" ")[1]]) {
+                acc[permission.name.split(" ")[1]] = [];
+            }
 
-        acc[permission.name.split(" ")[1]].push(permission);
+            acc[permission.name.split(" ")[1]].push(permission);
 
-        return acc;
-    }, {});
-});
+            return acc;
+        },
+        {}
+    )
+);
 
 //form
 const form = useForm({
     permissions: props.role.permissions.map((permission) => permission.id),
 });
+
+function selectAllGroup(group: string) {
+    form.permissions = [
+        ...form.permissions,
+        ...groupedPermissions.value[group].map((permission) => permission.id),
+    ];
+}
 
 function savePermissions() {
     form.put(route("roles.update", props.role.id), {
@@ -69,7 +76,7 @@ function savePermissions() {
             @click="savePermissions"
         />
 
-        <v-container>
+        <v-container class="mt-3">
             <v-row>
                 <v-col
                     cols="4"
@@ -93,6 +100,12 @@ function savePermissions() {
                                 :value="permission.id"
                                 v-model="form.permissions"
                                 hide-details
+                            />
+
+                            <v-btn
+                                text="Select All"
+                                size="small"
+                                @click="selectAllGroup(group)"
                             />
                         </v-card-text>
                     </v-card>

@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import { useTheme, useDisplay } from "vuetify";
 import { router, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 
 import SideBar from "./SideBar.vue";
+import User from "@/types/User";
 
 //user
-const user = ref(usePage().props.auth.user);
+const page: any = usePage();
+const user = ref<User>(page.props.auth.user);
 
 // drawer
 const { mobile } = useDisplay();
@@ -35,16 +37,23 @@ function changeTheme() {
 
 // notifications
 function markNotificationsAsRead() {
-    router.put(route("users.notifications.mark-as-read", user.value), {
-        onSuccess: () => {
-            router.reload();
-        },
-    });
+    router.put(
+        route("users.notifications.mark-as-read", user.value),
+        {},
+        {
+            onSuccess: () => {
+                router.reload();
+            },
+        }
+    );
 }
+
 const tabs = ref("all");
 const unreadNotifications = computed(() => {
-    return user.value.notifications.filter(
-        (notification) => notification.read_at === null
+    return (
+        user.value?.notifications?.filter(
+            (notification) => notification.read_at === null
+        ) || []
     );
 });
 </script>
@@ -106,7 +115,7 @@ const unreadNotifications = computed(() => {
                                 <v-window-item value="all">
                                     <v-list
                                         class="pa-2"
-                                        v-if="user.notifications.length != 0"
+                                        v-if="user?.notifications?.length != 0"
                                     >
                                         <v-list-item
                                             v-for="notification in user.notifications"
@@ -158,7 +167,7 @@ const unreadNotifications = computed(() => {
                                         v-if="unreadNotifications.length != 0"
                                     >
                                         <v-list-item
-                                            v-for="notification in user.notifications.filter(
+                                            v-for="notification in user?.notifications?.filter(
                                                 (notification) =>
                                                     notification.read_at ===
                                                     null
@@ -222,7 +231,7 @@ const unreadNotifications = computed(() => {
                                 :href="route('profile.show')"
                             />
                             <v-list-item
-                                v-if="$page.props.jetstream.hasApiFeatures"
+                                v-if="page.props.jetstream.hasApiFeatures"
                                 prepend-icon="mdi-api"
                                 v-use-inertia-link
                                 title="API Tokens"

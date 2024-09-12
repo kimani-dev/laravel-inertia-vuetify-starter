@@ -1,21 +1,20 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
+
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 import AppBar from "@/Components/AppBar.vue";
-import { computed } from "vue";
-import { watch } from "vue";
 
-defineProps({
-    title: String,
-});
+defineProps<{
+    title: string;
+}>();
 
 const loading = ref(false);
 
 // show loading screen only when request takes more than 250ms
-let timeout = null;
+let timeout: number | null = null;
 router.on("start", () => {
     timeout = setTimeout(() => {
         loading.value = true;
@@ -23,19 +22,19 @@ router.on("start", () => {
 });
 
 router.on("finish", () => {
-    clearTimeout(timeout);
+    if (timeout) clearTimeout(timeout);
     loading.value = false;
 });
 
 watch(
-    () => usePage().props.flash,
+    () => (usePage() as any).props.flash,
     ({ type, message }) => {
         if (type && message) {
             toast(message, {
                 theme: "colored",
                 type,
                 transition: "slide",
-                timer: 3000,
+                delay: 3000,
             });
         }
     }
@@ -43,9 +42,9 @@ watch(
 </script>
 
 <template>
-    <div>
-        <Head :title="title" />
-        <v-container fluid class="pa-0 pa-md-2">
+    <v-responsive>
+        <v-app>
+            <!-- loading overlay -->
             <v-overlay
                 :model-value="loading"
                 class="align-center justify-center"
@@ -54,14 +53,19 @@ watch(
                     <v-icon icon="mdi-laravel" />
                 </v-progress-circular>
             </v-overlay>
-            <v-layout>
-                <AppBar />
-                <v-main>
-                    <v-container fluid>
-                        <slot />
-                    </v-container>
-                </v-main>
-            </v-layout>
-        </v-container>
-    </div>
+
+            <!-- app bar -->
+            <AppBar />
+
+            <!-- page header -->
+            <Head :title="title" />
+
+            <!-- main content -->
+            <v-main>
+                <div class="ma-2">
+                    <slot />
+                </div>
+            </v-main>
+        </v-app>
+    </v-responsive>
 </template>

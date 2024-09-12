@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
 
@@ -118,7 +118,7 @@ const submit = () => {
                                 v-model="form.terms"
                                 :error-messages="form.errors.terms"
                                 v-if="
-                                    $page.props.jetstream
+                                    ($page as any).props.jetstream
                                         .hasTermsAndPrivacyPolicyFeature
                                 "
                             >

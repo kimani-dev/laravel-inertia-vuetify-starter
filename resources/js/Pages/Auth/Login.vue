@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
 
-defineProps({
-    canResetPassword: Boolean,
-    status: String,
-});
+defineProps<{
+    status: string;
+    canResetPassword: boolean;
+}>();
 
 const form = useForm({
     email: "",
