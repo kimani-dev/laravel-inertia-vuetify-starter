@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import IndexView from "@/Layouts/IndexView.vue";
 import Log from "@/types/Log";
+import ResponseData from "@/types/ResponseData";
 import moment from "moment";
 
 defineProps<{
-    logs: Log[];
+    logs: ResponseData<Log[]>;
 }>();
 
 const headers = [

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
-import IndexView from "@/Layouts/IndexView.vue";
+
+import ResponseData from "@/types/ResponseData";
 import User from "@/types/User";
 import Role from "@/types/Role";
-import Exportable from "@/types/Exportable";
 
-//props
-const props = defineProps<{
-    users: User[];
+import IndexView from "@/Layouts/IndexView.vue";
+
+defineProps<{
+    users: ResponseData<User[]>;
     roles: Role[];
 }>();
 
@@ -47,18 +47,6 @@ function createUser(closeDialog: Function) {
 function reloadData() {
     router.reload({ only: ["users"] });
 }
-
-// exportable data
-const exportable = computed<Exportable>(() => ({
-    head: ["Name", "Email", "Role"],
-    body: props.users.map((user) => [
-        user.name,
-        user.email,
-        user.roles.length > 0
-            ? user.roles.map((role) => role.name).join(", ")
-            : "Not Assigned",
-    ]),
-}));
 </script>
 
 <template>
@@ -67,7 +55,6 @@ const exportable = computed<Exportable>(() => ({
         :headers="headers"
         :items="users"
         route-name="users"
-        :exportable="exportable"
         @create="(close) => createUser(close)"
         @edit="reloadData"
         @delete="reloadData"
@@ -162,7 +149,5 @@ const exportable = computed<Exportable>(() => ({
             </v-chip>
             <v-chip v-else color="error" class="mr-2"> Not Assigned </v-chip>
         </template>
-        <!-- Data table slots end -->
-        <template #bottom> </template>
     </IndexView>
 </template>

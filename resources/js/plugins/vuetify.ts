@@ -29,6 +29,7 @@ export default createVuetify({
             color: "primary",
             class: "text-capitalize",
             VIcon: { color: "white" },
+            size: "small",
         },
         VCard: { rounded: "lg" },
         // form items
@@ -42,5 +43,10 @@ export default createVuetify({
         VContainer: { class: "pa-1 pa-md-0" },
         // icons
         VIcon: { color: "primary" },
+        // chip
+        VChip: {
+            rounded: "lg",
+            class: "font-weight-bold",
+        },
     },
 });

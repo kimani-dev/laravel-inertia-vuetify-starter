@@ -20,22 +20,29 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // return user with roles and permissions
-        $users = User::all();
-        foreach ($users as $user) {
-            $roles = $user->getRoleNames();
-            $permissions = $user->getAllPermissions();
-            $user->roles = $roles;
-            $user->permissions = $permissions;
-        }
         return Inertia::render('Users/Index', [
-            'users' => User::with('roles')->get()->map(function ($user) {
-                $user->role = $user->roles->first()?->id;
-                return $user;
-            }),
+            'users' => User::with('roles')
+                ->when($request->search, function ($query, $search) {
+                    $query->where('name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%');
+                })
+                ->when($request->role, function ($query, $role) {
+                    $query->whereHas('roles', function ($query) use ($role) {
+                        $query->where('name', $role);
+                    });
+                })
+                ->paginate($request->itemsPerPage ?? 10, ['*'], 'page', $request->page ?? 1),
             'roles' => Role::all(),
+            'filterOptions' => [
+                'role' => Role::all()->map(function ($role) {
+                    return [
+                        'value' => $role->name,
+                        'label' => $role->name,
+                    ];
+                }),
+            ]
         ]);
     }
 

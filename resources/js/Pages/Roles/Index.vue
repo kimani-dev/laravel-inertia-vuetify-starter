@@ -3,9 +3,10 @@ import { router, useForm } from "@inertiajs/vue3";
 
 import IndexView from "@/Layouts/IndexView.vue";
 import Role from "@/types/Role";
+import ResponseData from "@/types/ResponseData";
 
 defineProps<{
-    roles: Role[];
+    roles: ResponseData<Role[]>;
 }>();
 
 const headers = [

@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use Inertia\Inertia;
+use Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('read roles');
 
         return Inertia::render('Roles/Index', [
-            'roles' => Role::all()
+            'roles' => Role::paginate($request->itemsPerPage ?? 10, ['*'], 'page', $request->page ?? 1)
         ]);
     }
 

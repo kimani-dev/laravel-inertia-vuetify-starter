@@ -79,7 +79,8 @@ function savePermissions() {
         <v-container class="mt-3">
             <v-row>
                 <v-col
-                    cols="4"
+                    cols="12"
+                    md="4"
                     v-for="group in Object.keys(groupedPermissions)"
                     :key="group"
                 >
