@@ -3,6 +3,13 @@ import "@mdi/font/css/materialdesignicons.css";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { createVuetify } from "vuetify";
 
+const FormFieldDefaults = {
+    density: "comfortable",
+    rounded: "lg",
+    variant: "outlined",
+    color: "primary",
+};
+
 export default createVuetify({
     // Default set is MDI
     icons: {
@@ -27,26 +34,26 @@ export default createVuetify({
     defaults: {
         VBtn: {
             color: "primary",
-            class: "text-capitalize",
+            class: "text-capitalize font-weight-bold",
             VIcon: { color: "white" },
             size: "small",
+            rounded: "lg",
         },
         VCard: { rounded: "lg" },
         // form items
         VCheckbox: { color: "primary" },
-        VTextField: { variant: "outlined", rounded: "lg", color: "primary" },
-        VSelect: { variant: "outlined", rounded: "lg", color: "primary" },
-        VTextarea: { variant: "outlined", rounded: "lg", color: "primary" },
+        VTextField: { ...FormFieldDefaults },
+        VSelect: { ...FormFieldDefaults },
+        VTextarea: { ...FormFieldDefaults },
         VSlider: { color: "primary" },
-        VFileInput: { color: "primary", rounded: "lg", variant: "outlined" },
-        //container
+        VFileInput: { ...FormFieldDefaults },
+
         VContainer: { class: "pa-1 pa-md-0" },
-        // icons
         VIcon: { color: "primary" },
-        // chip
         VChip: {
             rounded: "lg",
             class: "font-weight-bold",
         },
+        VDateInput: { VBtn: { VIcon: { color: "primary" } } },
     },
 });

@@ -1,16 +1,27 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
+import DataTableProps from "@/types/DataTableProps";
+
 import AppLayout from "@/Layouts/AppLayout.vue";
 import DataTable from "@/Components/DataTable.vue";
-import ResponseData from "@/types/ResponseData";
 
-defineProps<{
+interface Props extends DataTableProps {
     title: string;
-    headers: { title: string; value: string }[];
-    items: ResponseData<Record<string, any>[]>;
-    routeName: string;
-}>();
+    resourceName?: string;
+    permissionName?: string;
+    createActionButtonText?: string;
+}
+defineProps<Props>();
+defineEmits([
+    "create-button-click",
+    "select-item-to-edit",
+    "click-save-changes",
+    "delete",
+]);
 
-const emit = defineEmits(["create", "edit", "delete", "selected"]);
+// create
+const createDialog = ref(false);
 </script>
 
 <template>
@@ -23,31 +34,13 @@ const emit = defineEmits(["create", "edit", "delete", "selected"]);
 
         <!-- Create item slot -->
         <slot name="create">
-            <my-dialog
-                v-if="can(`create ${routeName}`)"
-                :title="`Create ${title}`"
-                :subtitle="`Add new ${title} to the system`"
-            >
-                <template #activator="{ props }">
-                    <v-btn
-                        v-bind="props"
-                        prepend-icon="mdi-plus"
-                        :text="`Create ${title}`"
-                    />
-                </template>
-                <template #content>
-                    <slot name="create-content">
-                        <p>Use this slot to add your create content e.g form</p>
-                    </slot>
-                </template>
-                <template #action-button="{ close }">
-                    <v-btn
-                        :text="`Create ${title}`"
-                        variant="elevated"
-                        @click="emit('create', close)"
-                    />
-                </template>
-            </my-dialog>
+            <v-btn
+                v-if="can(`create ${permissionName}`)"
+                class="mb-4"
+                prepend-icon="mdi-plus"
+                :text="`Create ${resourceName ?? title}`"
+                @click="createDialog = true"
+            />
         </slot>
 
         <slot name="prepend" />
@@ -55,11 +48,22 @@ const emit = defineEmits(["create", "edit", "delete", "selected"]);
         <!-- Data table for items start -->
         <slot>
             <DataTable
-                class="mt-5"
-                :title
                 :headers="headers"
                 :items="items"
                 :route-name="routeName"
+                :override-edit
+                :override-delete
+                :has-date-range
+                :route-name-is-full
+                :hide-actions
+                :route-params
+                @select-item-to-edit="
+                    ($event: any) => $emit('select-item-to-edit', $event)
+                "
+                @click-save-changes="
+                    ($event: any) => $emit('click-save-changes', $event)
+                "
+                @delete="($event) => $emit('delete', $event)"
             >
                 <!-- re expose all data table slots -->
                 <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -70,4 +74,21 @@ const emit = defineEmits(["create", "edit", "delete", "selected"]);
 
         <slot name="bottom" />
     </AppLayout>
+
+    <!-- create dialog -->
+    <base-dialog
+        v-if="can(`create ${permissionName}`)"
+        :title="`Create ${title}`"
+        :subtitle="`Add new ${title} to the system`"
+        :visible="createDialog"
+        action-button-text="Save"
+        @close="createDialog = false"
+        @action-click="
+            $emit('create-button-click', () => (createDialog = false))
+        "
+    >
+        <slot name="create-form">
+            <p>Use this slot to add your create form</p>
+        </slot>
+    </base-dialog>
 </template>

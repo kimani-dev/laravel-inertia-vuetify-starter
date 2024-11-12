@@ -14,8 +14,12 @@ defineProps<{
 
 const headers = [
     {
-        title: "User",
-        value: "user",
+        title: "Name",
+        value: "name",
+    },
+    {
+        title: "Email",
+        value: "email",
     },
     {
         title: "Role",
@@ -39,13 +43,31 @@ function createUser(closeDialog: Function) {
         onSuccess: () => {
             form.reset();
             closeDialog();
-            reloadData();
         },
     });
 }
 
-function reloadData() {
-    router.reload({ only: ["users"] });
+// edit form
+const editForm = useForm({
+    id: null as number | null,
+    name: "",
+    email: "",
+    role: null as number | null,
+});
+
+function selectItemToEdit(user: User) {
+    editForm.id = user.id;
+    editForm.name = user.name;
+    editForm.email = user.email;
+    editForm.role = user.roles.length > 0 ? user.roles[0].id : null;
+}
+
+function saveChanges(closeDialog: Function) {
+    editForm.put(route("users.update", editForm.id), {
+        onSuccess: () => {
+            closeDialog();
+        },
+    });
 }
 </script>
 
@@ -55,11 +77,14 @@ function reloadData() {
         :headers="headers"
         :items="users"
         route-name="users"
-        @create="(close) => createUser(close)"
-        @edit="reloadData"
-        @delete="reloadData"
+        permission-name="users"
+        :override-edit="true"
+        @create-button-click="createUser"
+        @select-item-to-edit="selectItemToEdit"
+        @click-save-changes="saveChanges"
     >
-        <template #create-content>
+        <!-- Create form slot -->
+        <template #create-form>
             <v-form @submit.prevent>
                 <v-text-field
                     label="Name"
@@ -94,7 +119,9 @@ function reloadData() {
                 />
             </v-form>
         </template>
-        <template #edit-content="{ editForm }">
+
+        <!-- Edit form slot -->
+        <template #edit-form>
             <v-form @submit.prevent>
                 <v-text-field
                     label="Name"
@@ -129,7 +156,8 @@ function reloadData() {
                 />
             </v-form>
         </template>
-        <!-- Data table slots begin -->
+
+        <!-- Data table slots -->
         <template #item.user="{ item }">
             <v-list-item
                 :title="item.name"

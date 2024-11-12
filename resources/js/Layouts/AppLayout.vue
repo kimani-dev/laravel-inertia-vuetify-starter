@@ -66,6 +66,13 @@ watch(
                     <slot />
                 </div>
             </v-main>
+
+            <!-- footer -->
+            <v-footer app color="transparent" absolute>
+                <p class="mx-auto">
+                    &copy; {{ new Date().getFullYear() }} Laravel Vue3
+                </p>
+            </v-footer>
         </v-app>
     </v-responsive>
 </template>

@@ -48,7 +48,7 @@ createInertiaApp({
             })
             .use(Can)
             //components
-            .component("my-dialog", BaseDialog)
+            .component("base-dialog", BaseDialog)
             .component("base-link", BaseLink)
             .mount(el);
     },
