@@ -6,7 +6,10 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/src/js";
 import { router } from "@inertiajs/vue3";
+import { Can } from "./helpers/can";
 import vuetify from "./plugins/vuetify";
+import BaseDialog from "./Components/BaseDialog.vue";
+import BaseLink from "./Components/BaseLink.vue";
 
 //@ts-ignore
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -14,9 +17,9 @@ const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
+        //@ts-ignore
         resolvePageComponent(
             `./Pages/${name}.vue`,
-            //@ts-ignore
             import.meta.glob("./Pages/**/*.vue")
         ),
     //@ts-ignore
@@ -26,6 +29,7 @@ createInertiaApp({
                 .use(plugin)
                 .use(ZiggyVue)
                 .use(vuetify)
+                .use(Can)
                 // When used will make the element with the href property
                 // navigate with inertia's route visit method hence maintaining
                 // SPA behaviour instead of full page reload
@@ -39,6 +43,9 @@ createInertiaApp({
                         }
                     },
                 })
+                // components
+                .component("base-dialog", BaseDialog)
+                .component("base-link", BaseLink)
                 .mount(el)
         );
     },

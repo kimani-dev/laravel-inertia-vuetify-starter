@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Users;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,5 +63,62 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the roles relationship.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * Assign the user a role.
+     */
+    public function assignRole(string $role)
+    {
+        $role = Role::where('name', $role)->firstOrFail();
+        $this->roles()->sync($role->id);
+    }
+
+    /**
+     * Check if the user has a role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles->contains('name', $role);
+    }
+
+    /**
+     * Check if the user has any role.
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return $this->roles->whereIn('name', $roles)->isNotEmpty();
+    }
+
+    /**
+     * Check if the user has all roles.
+     */
+    public function hasAllRoles(array $roles): bool
+    {
+        return $this->roles->whereIn('name', $roles)->count() === count($roles);
+    }
+
+    /**
+     * Get the permissions relationship.
+     */
+    public function permissions()
+    {
+        return $this->roles->map->permissions->flatten()->pluck('name')->unique();
+    }
+
+    /**
+     * Check if the user has a permission.
+     */
+    public function hasPermissionTo(string $permission): bool
+    {
+        return $this->permissions()->contains($permission);
     }
 }

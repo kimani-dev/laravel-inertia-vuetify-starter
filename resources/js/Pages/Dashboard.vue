@@ -1,22 +1,30 @@
-<script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
+<script setup lang="ts">
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { computed } from "vue";
+
+const greeting = computed(() => {
+    const date = new Date();
+    const hours = date.getHours();
+    if (hours < 12) return "Good Morning";
+    if (hours < 18) return "Good Afternoon";
+    return "Good Evening";
+});
 </script>
 
 <template>
     <AppLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
-                </div>
-            </div>
-        </div>
+        <v-container fluid>
+            <v-row>
+                <v-col>
+                    <h1 class="text-h5">
+                        {{
+                            `${greeting}, ${
+                                ($page.props.auth as any).user.name
+                            }`
+                        }}
+                    </h1>
+                </v-col>
+            </v-row>
+        </v-container>
     </AppLayout>
 </template>
