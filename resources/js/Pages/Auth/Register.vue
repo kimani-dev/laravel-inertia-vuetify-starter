@@ -1,24 +1,20 @@
-<script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+<script setup lang="ts">
+import { ref } from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
     terms: false,
 });
 
+const showPassword = ref(false);
+
 const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+    form.post(route("register"), {
+        onFinish: () => form.reset("password", "password_confirmation"),
     });
 };
 </script>
@@ -26,87 +22,178 @@ const submit = () => {
 <template>
     <Head title="Register" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="new-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="new-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
-                <InputLabel for="terms">
-                    <div class="flex items-center">
-                        <Checkbox id="terms" v-model:checked="form.terms" name="terms" required />
-
-                        <div class="ms-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Privacy Policy</a>
+    <v-container fluid class="bg-background pa-0 ma-0" style="height: 100vh">
+        <v-row class="fill-height" justify="center" no-gutters>
+            <v-col cols="12" md="7" align-self="center">
+                <v-card width="500" class="mx-auto">
+                    <v-card-title>
+                        <div class="d-flex justify-space-between">
+                            <div>
+                                <h1 class="text-h5 text-primary">Sign Up</h1>
+                                <p class="text-subtitle-1">
+                                    Enter Credentials To Continue
+                                </p>
+                            </div>
+                            <v-chip
+                                color="primary"
+                                variant="elevated"
+                                class="my-auto pa-4"
+                            >
+                                <div class="d-flex">
+                                    <v-icon icon="mdi-laravel" size="25" />
+                                    <p class="text-subtitle-2 ml-2">MY APP</p>
+                                </div>
+                            </v-chip>
                         </div>
-                    </div>
-                    <InputError class="mt-2" :message="form.errors.terms" />
-                </InputLabel>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Already registered?
-                </Link>
-
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </AuthenticationCard>
+                    </v-card-title>
+                    <v-card-text class="mt-2">
+                        <v-btn
+                            block
+                            variant="outlined"
+                            prepend-icon="mdi-google"
+                        >
+                            Sign In With Google
+                        </v-btn>
+                        <v-row no-gutters class="mt-3">
+                            <v-col align-self="center">
+                                <v-divider thickness="2" />
+                            </v-col>
+                            <v-col cols="1">
+                                <div
+                                    class="rounded-pill bg-primary text-center text-subtitle-2"
+                                >
+                                    OR
+                                </div>
+                            </v-col>
+                            <v-col align-self="center">
+                                <v-divider thickness="2" />
+                            </v-col>
+                        </v-row>
+                        <p class="text-subtitle-2 text-center mt-2">
+                            Sign In With Email Address
+                        </p>
+                        <!-- <p v-if="status" class="text-subtitle-2 text-success">
+                            {{ status }}
+                        </p> -->
+                        <v-form class="mt-2" @submit.prevent="submit">
+                            <v-text-field
+                                label="Full Name"
+                                v-model="form.name"
+                                :error-messages="form.errors.name"
+                            />
+                            <v-text-field
+                                label="Email Address/Username"
+                                v-model="form.email"
+                                :error-messages="form.errors.email"
+                            />
+                            <v-text-field
+                                label="Password"
+                                v-model="form.password"
+                                :error-messages="form.errors.password"
+                                :type="showPassword ? 'text' : 'password'"
+                                :append-inner-icon="
+                                    showPassword ? 'mdi-eye-off' : 'mdi-eye'
+                                "
+                                @click:append-inner="
+                                    showPassword = !showPassword
+                                "
+                            />
+                            <v-text-field
+                                label="Confirm Password"
+                                v-model="form.password_confirmation"
+                                :error-messages="
+                                    form.errors.password_confirmation
+                                "
+                                :type="showPassword ? 'text' : 'password'"
+                                :append-inner-icon="
+                                    showPassword ? 'mdi-eye-off' : 'mdi-eye'
+                                "
+                                @click:append-inner="
+                                    showPassword = !showPassword
+                                "
+                            />
+                            <v-checkbox
+                                class="mt-n5"
+                                :hide-details="!form.errors.terms"
+                                v-model="form.terms"
+                                :error-messages="form.errors.terms"
+                                v-if="
+                                    ($page as any).props.jetstream
+                                        .hasTermsAndPrivacyPolicyFeature
+                                "
+                            >
+                                <template #label>
+                                    <p>
+                                        I agree to the
+                                        <a
+                                            target="_blank"
+                                            :href="route('terms.show')"
+                                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >Terms of Service</a
+                                        >
+                                        and
+                                        <a
+                                            target="_blank"
+                                            :href="route('policy.show')"
+                                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >Privacy Policy</a
+                                        >
+                                    </p>
+                                </template>
+                            </v-checkbox>
+                            <v-btn
+                                class="mt-3"
+                                type="submit"
+                                block
+                                :loading="form.processing"
+                                >Sign Up</v-btn
+                            >
+                            <v-btn
+                                v-use-inertia-link
+                                block
+                                :href="route('login')"
+                                variant="text"
+                                class="mt-2"
+                                >Already Registered?</v-btn
+                            >
+                        </v-form>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col
+                cols="12"
+                md="5"
+                class="d-flex flex-column justify-space-between bg-grey-lighten-3"
+            >
+                <v-img
+                    src="/assets/illustrations/onboarding.svg"
+                    width="300"
+                    class="mx-auto"
+                />
+                <v-carousel
+                    :show-arrows="false"
+                    hide-delimiter-background
+                    height="200"
+                    color="primary"
+                    cycle
+                    interval="2000"
+                >
+                    <v-carousel-item v-for="n in 3">
+                        <div class="pa-3">
+                            <p class="text-h5">
+                                Welcome to Laravel Vuetify Starter Kit
+                            </p>
+                            <p class="text-subtitle-2">
+                                Lorem ipsum, dolor sit amet consectetur
+                                adipisicing elit. Sint provident facilis illo
+                                repellendus, neque consequatur dicta omnis ab
+                                iure nesciunt similique optio tempora qui
+                                aliquid nulla quisquam, deserunt rerum quo.
+                            </p>
+                        </div>
+                    </v-carousel-item>
+                </v-carousel>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>

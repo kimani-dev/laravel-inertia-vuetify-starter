@@ -121,7 +121,7 @@ function submit() {
                                             showPassword = !showPassword
                                         "
                                     />
-                                    <div class="d-flex">
+                                    <div class="d-flex justify-space-between">
                                         <v-checkbox
                                             label="Remember Me?"
                                             hide-details
@@ -160,20 +160,23 @@ function submit() {
             <v-col
                 cols="12"
                 md="5"
-                class="d-flex flex-column justify-space-between bg-grey-lighten-3"
+                class="d-flex flex-column justify-center bg-background elevation-1"
             >
-                <v-img
-                    src="/assets/illustrations/onboarding.svg"
-                    width="300"
-                    class="mx-auto"
-                />
+                <div>
+                    <v-img
+                        src="/assets/illustrations/login.svg"
+                        width="400"
+                        class="mx-auto"
+                    />
+                </div>
                 <v-carousel
+                    class="mt-10"
                     :show-arrows="false"
                     hide-delimiter-background
-                    height="200"
                     color="primary"
                     cycle
                     interval="2000"
+                    height="200"
                 >
                     <v-carousel-item v-for="n in 3">
                         <div class="pa-3">

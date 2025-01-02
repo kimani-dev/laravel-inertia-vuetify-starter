@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useForm } from "@inertiajs/vue3";
+import { useForm, Deferred } from "@inertiajs/vue3";
 
 import ResponseData from "@/types/ResponseData";
 import User from "@/types/User";
@@ -9,7 +9,7 @@ import IndexView from "@/Layouts/IndexView.vue";
 
 defineProps<{
     users: ResponseData<User[]>;
-    roles: Role[];
+    roles?: Role[];
 }>();
 
 const headers = [
@@ -98,25 +98,27 @@ function saveChanges(closeDialog: Function) {
                     v-model="form.email"
                     :error-messages="form.errors.email"
                 />
-                <v-select
-                    label="Role"
-                    prepend-inner-icon="mdi-shield-account-outline"
-                    v-model="form.role"
-                    :items="roles"
-                    :error-messages="form.errors.role"
-                    :item-title="
-                        (item) =>
-                            item.name
-                                .split(' ')
-                                .map(
-                                    (word) =>
-                                        word.charAt(0).toUpperCase() +
-                                        word.slice(1)
-                                )
-                                .join(' ')
-                    "
-                    item-value="id"
-                />
+                <Deferred data="roles">
+                    <v-select
+                        label="Role"
+                        prepend-inner-icon="mdi-shield-account-outline"
+                        v-model="form.role"
+                        :items="roles"
+                        :error-messages="form.errors.role"
+                        :item-title="
+                            (item) =>
+                                item.name
+                                    .split(' ')
+                                    .map(
+                                        (word) =>
+                                            word.charAt(0).toUpperCase() +
+                                            word.slice(1)
+                                    )
+                                    .join(' ')
+                        "
+                        item-value="id"
+                    />
+                </Deferred>
             </v-form>
         </template>
 
@@ -135,25 +137,31 @@ function saveChanges(closeDialog: Function) {
                     v-model="editForm.email"
                     :error-messages="editForm.errors.email"
                 />
-                <v-select
-                    label="Role"
-                    prepend-inner-icon="mdi-shield-account-outline"
-                    v-model="editForm.role"
-                    :items="roles"
-                    :error-messages="editForm.errors.role"
-                    :item-title="
-                        (item) =>
-                            item.name
-                                .split(' ')
-                                .map(
-                                    (word) =>
-                                        word.charAt(0).toUpperCase() +
-                                        word.slice(1)
-                                )
-                                .join(' ')
-                    "
-                    item-value="id"
-                />
+                <Deferred data="roles">
+                    <template #fallback>
+                        <div>Loading...</div>
+                    </template>
+
+                    <v-select
+                        label="Role"
+                        prepend-inner-icon="mdi-shield-account-outline"
+                        v-model="editForm.role"
+                        :items="roles"
+                        :error-messages="editForm.errors.role"
+                        :item-title="
+                            (item) =>
+                                item.name
+                                    .split(' ')
+                                    .map(
+                                        (word) =>
+                                            word.charAt(0).toUpperCase() +
+                                            word.slice(1)
+                                    )
+                                    .join(' ')
+                        "
+                        item-value="id"
+                    />
+                </Deferred>
             </v-form>
         </template>
 

@@ -71,7 +71,6 @@ const unreadNotifications = computed(() => {
                     :icon="
                         isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night'
                     "
-                    size="30"
                     class="my-auto mr-2"
                     color="primary"
                     @click="changeTheme"
@@ -86,7 +85,6 @@ const unreadNotifications = computed(() => {
                                 <v-icon
                                     icon="mdi-bell"
                                     color="primary"
-                                    size="30"
                                     v-bind="props"
                                 />
                             </v-badge>

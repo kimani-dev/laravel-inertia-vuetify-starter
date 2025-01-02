@@ -1,14 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { ref, computed, watch } from "vue";
 import { router, useForm, usePage } from "@inertiajs/vue3";
-import axios from "axios";
-import ConfirmsPassword from "@/Components/ConfirmsPassword.vue";
 
-const props = defineProps<{
-    requiresConfirmation: boolean;
-}>();
+const props = defineProps({
+    requiresConfirmation: Boolean,
+});
 
-const page: any = usePage();
+const page = usePage();
 const enabling = ref(false);
 const confirming = ref(false);
 const disabling = ref(false);
@@ -24,14 +22,14 @@ const twoFactorEnabled = computed(
     () => !enabling.value && page.props.auth.user?.two_factor_enabled
 );
 
-watch(twoFactorEnabled, (value) => {
-    if (!value) {
+watch(twoFactorEnabled, () => {
+    if (!twoFactorEnabled.value) {
         confirmationForm.reset();
         confirmationForm.clearErrors();
     }
 });
 
-function enableTwoFactorAuthentication() {
+const enableTwoFactorAuthentication = () => {
     enabling.value = true;
 
     router.post(
@@ -51,30 +49,30 @@ function enableTwoFactorAuthentication() {
             },
         }
     );
-}
+};
 
 // get the qr code
-async function showQrCode() {
+const showQrCode = () => {
     return axios.get(route("two-factor.qr-code")).then((response) => {
         qrCode.value = response.data.svg;
     });
-}
+};
 
 // get the setup key
-async function showSetupKey() {
+const showSetupKey = () => {
     return axios.get(route("two-factor.secret-key")).then((response) => {
         setupKey.value = response.data.secretKey;
     });
-}
+};
 
 // get the recovery codes
-async function showRecoveryCodes() {
+const showRecoveryCodes = () => {
     return axios.get(route("two-factor.recovery-codes")).then((response) => {
         recoveryCodes.value = response.data;
     });
-}
+};
 
-function confirmTwoFactorAuthentication() {
+const confirmTwoFactorAuthentication = () => {
     confirmationForm.post(route("two-factor.confirm"), {
         errorBag: "confirmTwoFactorAuthentication",
         preserveScroll: true,
@@ -85,15 +83,15 @@ function confirmTwoFactorAuthentication() {
             setupKey.value = null;
         },
     });
-}
+};
 
-function regenerateRecoveryCodes() {
+const regenerateRecoveryCodes = () => {
     axios
         .post(route("two-factor.recovery-codes"))
         .then(() => showRecoveryCodes());
-}
+};
 
-function disableTwoFactorAuthentication() {
+const disableTwoFactorAuthentication = () => {
     disabling.value = true;
 
     router.delete(route("two-factor.disable"), {
@@ -103,7 +101,7 @@ function disableTwoFactorAuthentication() {
             confirming.value = false;
         },
     });
-}
+};
 </script>
 
 <template>
@@ -203,15 +201,15 @@ function disableTwoFactorAuthentication() {
                 <!-- Actions start -->
                 <div class="mt-5">
                     <div v-if="!twoFactorEnabled">
-                        <ConfirmsPassword
+                        <!-- <ConfirmsPassword
                             @confirmed="enableTwoFactorAuthentication"
                         >
                             <v-btn :loading="enabling">Enable</v-btn>
-                        </ConfirmsPassword>
+                        </ConfirmsPassword> -->
                     </div>
 
                     <div v-else>
-                        <ConfirmsPassword
+                        <!-- <ConfirmsPassword
                             @confirmed="confirmTwoFactorAuthentication"
                         >
                             <v-btn v-if="confirming" :loading="enabling"
@@ -254,7 +252,7 @@ function disableTwoFactorAuthentication() {
                                 :loading="disabling"
                                 >Disable</v-btn
                             >
-                        </ConfirmsPassword>
+                        </ConfirmsPassword> -->
                     </div>
                 </div>
                 <!-- Actions end -->
