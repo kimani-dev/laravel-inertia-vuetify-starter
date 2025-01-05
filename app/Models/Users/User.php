@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -19,6 +20,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -63,62 +65,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    /**
-     * Get the roles relationship.
-     */
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
-    /**
-     * Assign the user a role.
-     */
-    public function assignRole(string $role)
-    {
-        $role = Role::where('name', $role)->firstOrFail();
-        $this->roles()->sync($role->id);
-    }
-
-    /**
-     * Check if the user has a role.
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles->contains('name', $role);
-    }
-
-    /**
-     * Check if the user has any role.
-     */
-    public function hasAnyRole(array $roles): bool
-    {
-        return $this->roles->whereIn('name', $roles)->isNotEmpty();
-    }
-
-    /**
-     * Check if the user has all roles.
-     */
-    public function hasAllRoles(array $roles): bool
-    {
-        return $this->roles->whereIn('name', $roles)->count() === count($roles);
-    }
-
-    /**
-     * Get the permissions relationship.
-     */
-    public function permissions()
-    {
-        return $this->roles->map->permissions->flatten()->pluck('name')->unique();
-    }
-
-    /**
-     * Check if the user has a permission.
-     */
-    public function hasPermissionTo(string $permission): bool
-    {
-        return $this->permissions()->contains($permission);
     }
 }

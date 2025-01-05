@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Models\Users\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -49,7 +50,10 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+        return inertia('Roles/Show', [
+            'role' => $role->load('permissions'),
+            'permissions' => Permission::all(),
+        ]);
     }
 
     /**

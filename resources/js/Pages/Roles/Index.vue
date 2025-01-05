@@ -43,7 +43,9 @@ function createRole(closeModal: Function) {
         :headers="headers"
         :items="roles"
         route-name="roles"
-        @create="(close) => createRole(close)"
+        permission-name="roles"
+        resource-name="Role"
+        @create-button-click="(close) => createRole(close)"
         @delete="router.reload({ only: ['roles'] })"
     >
         <!-- Create form content slot -->

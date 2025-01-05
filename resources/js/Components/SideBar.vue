@@ -49,6 +49,7 @@ const links = [
                 title: "Users",
                 icon: "mdi-account-group-outline",
                 route: "users.index",
+                permissionName: "view users",
             },
         ],
     },
@@ -59,6 +60,7 @@ const links = [
                 title: "Roles and Permissions",
                 icon: "mdi-shield-account-outline",
                 route: "roles.index",
+                permissionName: "view roles",
             },
             // {
             //     title: "Access Logs",
@@ -111,6 +113,7 @@ function logout() {
                 <v-list-item
                     v-for="child in link.children"
                     v-use-inertia-link
+                  
                     :key="child.title"
                     :href="route(child.route)"
                     :active="route().current(`${baseRouteName(child.route)}.*`)"

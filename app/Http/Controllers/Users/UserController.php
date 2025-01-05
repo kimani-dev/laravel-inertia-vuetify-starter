@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
-use App\Models\Users\Role;
 use App\Models\Users\User;
 use App\Notifications\GeneralNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -20,6 +20,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('view users');
+        
         return Inertia::render('Users/Index', [
             'users' => User::with('roles')
                 ->when($request->search, function ($query, $search) {
