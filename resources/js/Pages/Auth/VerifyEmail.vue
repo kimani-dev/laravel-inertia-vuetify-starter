@@ -8,13 +8,13 @@ const props = defineProps({
 
 const form = useForm({});
 
-const submit = () => {
+function submit() {
     form.post(route("verification.send"));
-};
+}
 
-const logout = () => {
+function logout() {
     router.post(route("logout"));
-};
+}
 
 const verificationLinkSent = computed(
     () => props.status === "verification-link-sent"
@@ -32,7 +32,7 @@ const verificationLinkSent = computed(
                     subtitle="You must verify your email address to continue"
                 >
                     <template #text>
-                        <p class="text-subtitle-21">
+                        <p class="text-subtitle-2">
                             Before continuing, could you verify your email
                             address by clicking on the link we just emailed to
                             you? If you didn't receive the email, we will gladly
@@ -55,7 +55,7 @@ const verificationLinkSent = computed(
                                 :loading="form.processing"
                                 @click="submit"
                             />
-                            <div>
+                            <div class="d-flex ga-2">
                                 <v-btn
                                     variant="elevated"
                                     v-use-inertia-link

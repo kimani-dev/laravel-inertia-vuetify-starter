@@ -19,6 +19,7 @@ export default defineConfig({
         }),
         vuetify({
             autoImport: { labs: true },
+            styles: { configFile: "/resources/js/styles/style.scss" },
         }),
     ],
 });

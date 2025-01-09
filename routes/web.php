@@ -24,3 +24,5 @@ Route::middleware([
 
     include __DIR__.'/web/users.php';
 });
+
+include __DIR__.'/web/auth.php';

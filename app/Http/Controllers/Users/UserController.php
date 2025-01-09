@@ -8,9 +8,12 @@ use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\Users\User;
 use App\Notifications\GeneralNotification;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -73,6 +76,41 @@ class UserController extends Controller
         sendFlashMessage('success', 'User created successfully!');
 
         return redirect()->route('users.index');
+    }
+
+    public function googleSignInCallback()
+    {
+        $user = Socialite::driver('google')->user();
+
+        $existingUser = User::where('email', $user->email)->first();
+
+        if ($existingUser) {
+            Auth::login($existingUser, true);
+        } else {
+            $newUser = new User();
+            $newUser->name = $user->getName();
+            $newUser->email = $user->getEmail();
+            $newUser->password = Hash::make(Str::random(8));
+            $newUser->save();
+
+            // download the user profile picture and save it to the storage
+            $avatarUrl = $user->getAvatar();
+            if ($avatarUrl) {
+                $avatarContents = file_get_contents($avatarUrl);
+                $avatarName = basename($avatarUrl);
+                $tempPath = sys_get_temp_dir() . '/' . $avatarName;
+                file_put_contents($tempPath, $avatarContents);
+                $uploadedFile = new UploadedFile($tempPath, $avatarName, null, null, true);
+                $newUser->updateProfilePhoto($uploadedFile);
+            }
+
+            $newUser->assignRole('user');
+            $this->sendNewUserEmail($newUser);
+
+            Auth::login($newUser, true);
+        }
+
+        return redirect()->route('dashboard');
     }
 
     /**

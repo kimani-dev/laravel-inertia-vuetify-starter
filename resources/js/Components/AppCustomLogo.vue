@@ -1,8 +1,12 @@
 <template>
-    <div class="pa-2 bg-primary rounded-lg d-flex justify-center">
-        <div class="d-flex">
-            <v-icon icon="mdi-laravel" color="white" class="my-auto" />
-            <p class="text-h6 ml-2">Laravel</p>
-        </div>
-    </div>
+    <v-chip
+        color="primary"
+        variant="elevated"
+        class="my-auto pa-4"
+        text="MY APP"
+    >
+        <template #prepend>
+            <v-icon icon="mdi-laravel" color="white" class="mr-2" />
+        </template>
+    </v-chip>
 </template>

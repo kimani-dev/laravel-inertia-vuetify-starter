@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import AppCustomLogo from "@/Components/AppCustomLogo.vue";
+import AuthPageLayout from "@/Layouts/AuthPageLayout.vue";
 
 const form = useForm({
     name: "",
@@ -20,40 +22,30 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Register" />
+    <AuthPageLayout title="Register">
+        <v-row justify="center">
+            <v-col align-self="center" cols="12" md="8">
+                <v-card
+                    class="mx-auto"
+                    title="Sign Up"
+                    subtitle="Enter Credentials To Continue"
+                >
+                    <template #append>
+                        <AppCustomLogo />
+                    </template>
 
-    <v-container fluid class="bg-background pa-0 ma-0" style="height: 100vh">
-        <v-row class="fill-height" justify="center" no-gutters>
-            <v-col cols="12" md="7" align-self="center">
-                <v-card width="500" class="mx-auto">
-                    <v-card-title>
-                        <div class="d-flex justify-space-between">
-                            <div>
-                                <h1 class="text-h5 text-primary">Sign Up</h1>
-                                <p class="text-subtitle-1">
-                                    Enter Credentials To Continue
-                                </p>
-                            </div>
-                            <v-chip
-                                color="primary"
-                                variant="elevated"
-                                class="my-auto pa-4"
-                            >
-                                <div class="d-flex">
-                                    <v-icon icon="mdi-laravel" size="25" />
-                                    <p class="text-subtitle-2 ml-2">MY APP</p>
-                                </div>
-                            </v-chip>
-                        </div>
-                    </v-card-title>
-                    <v-card-text class="mt-2">
+                    <!-- social auth -->
+                    <template #text>
                         <v-btn
+                            v-use-inertia-link
                             block
                             variant="outlined"
                             prepend-icon="mdi-google"
-                        >
-                            Sign In With Google
-                        </v-btn>
+                            text="Sign Up With Google"
+                            :href="route('google.login')"
+                        />
+
+                        <!-- divider for social auth and email sign up form -->
                         <v-row no-gutters class="mt-3">
                             <v-col align-self="center">
                                 <v-divider thickness="2" />
@@ -66,15 +58,19 @@ const submit = () => {
                                 </div>
                             </v-col>
                             <v-col align-self="center">
-                                <v-divider thickness="2" />
+                                <v-divider thickness="1" />
                             </v-col>
                         </v-row>
                         <p class="text-subtitle-2 text-center mt-2">
                             Sign In With Email Address
                         </p>
+
+                        <!-- auth status e.g pasword reset success -->
                         <!-- <p v-if="status" class="text-subtitle-2 text-success">
                             {{ status }}
                         </p> -->
+
+                        <!-- sign up form -->
                         <v-form class="mt-2" @submit.prevent="submit">
                             <v-text-field
                                 label="Full Name"
@@ -125,75 +121,38 @@ const submit = () => {
                                 <template #label>
                                     <p>
                                         I agree to the
-                                        <a
-                                            target="_blank"
+                                        <base-link
                                             :href="route('terms.show')"
-                                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                            >Terms of Service</a
-                                        >
+                                            v-text="'Terms of Service'"
+                                        />
                                         and
-                                        <a
-                                            target="_blank"
+                                        <base-link
                                             :href="route('policy.show')"
-                                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                            >Privacy Policy</a
-                                        >
+                                            v-text="'Privacy Policy'"
+                                        />
                                     </p>
                                 </template>
                             </v-checkbox>
+
                             <v-btn
                                 class="mt-3"
                                 type="submit"
                                 block
                                 :loading="form.processing"
-                                >Sign Up</v-btn
-                            >
+                                text="Sign Up"
+                            />
                             <v-btn
                                 v-use-inertia-link
                                 block
                                 :href="route('login')"
                                 variant="text"
                                 class="mt-2"
-                                >Already Registered?</v-btn
-                            >
+                                text="Already Registered? Sign In"
+                            />
                         </v-form>
-                    </v-card-text>
+                    </template>
                 </v-card>
             </v-col>
-            <v-col
-                cols="12"
-                md="5"
-                class="d-flex flex-column justify-space-between bg-grey-lighten-3"
-            >
-                <v-img
-                    src="/assets/illustrations/onboarding.svg"
-                    width="300"
-                    class="mx-auto"
-                />
-                <v-carousel
-                    :show-arrows="false"
-                    hide-delimiter-background
-                    height="200"
-                    color="primary"
-                    cycle
-                    interval="2000"
-                >
-                    <v-carousel-item v-for="n in 3">
-                        <div class="pa-3">
-                            <p class="text-h5">
-                                Welcome to Laravel Vuetify Starter Kit
-                            </p>
-                            <p class="text-subtitle-2">
-                                Lorem ipsum, dolor sit amet consectetur
-                                adipisicing elit. Sint provident facilis illo
-                                repellendus, neque consequatur dicta omnis ab
-                                iure nesciunt similique optio tempora qui
-                                aliquid nulla quisquam, deserunt rerum quo.
-                            </p>
-                        </div>
-                    </v-carousel-item>
-                </v-carousel>
-            </v-col>
         </v-row>
-    </v-container>
+    </AuthPageLayout>
 </template>
