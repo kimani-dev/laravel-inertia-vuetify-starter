@@ -1,9 +1,9 @@
 // Custom vuetify sass variables from here
-$quicksand: "Quicksand", sans-serif;
+$font-family: "Inter", sans-serif;
 
 @use "vuetify/settings" with (
-    $body-font-family: $quicksand,
-    $heading-font-family: $quicksand
+    $body-font-family: $font-family,
+    $heading-font-family: $font-family
 );
 
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');

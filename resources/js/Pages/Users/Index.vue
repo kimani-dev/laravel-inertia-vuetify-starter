@@ -9,7 +9,7 @@ import IndexView from "@/Layouts/IndexView.vue";
 
 defineProps<{
     users: ResponseData<User[]>;
-    roles?: Role[];
+    roles: Role[];
 }>();
 
 const headers = [

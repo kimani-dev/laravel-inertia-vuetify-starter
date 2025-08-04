@@ -33,10 +33,9 @@ export default createVuetify({
     defaults: {
         VBtn: {
             color: "primary",
-            class: "text-capitalize font-weight-bold",
+            class: "text-capitalize",
             VIcon: { color: "white" },
-            size: "small",
-            rounded: "lg",
+            rounded: "md",
         },
         VCard: { rounded: "lg" },
         // form items
