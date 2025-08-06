@@ -1,17 +1,34 @@
-<script setup>
-import { computed } from "vue";
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
 import { Head, router, useForm } from "@inertiajs/vue3";
 
-const props = defineProps({
-    status: String,
-});
+const props = defineProps<{
+    status: string;
+}>();
 
 const form = useForm({});
 
-function submit() {
-    form.post(route("verification.send"));
+function sendVerificationLink() {
+    form.post(route("verification.send"), {
+        onSuccess: () => startTimer(),
+    });
 }
 
+onMounted(() => sendVerificationLink());
+
+// 20s timer
+const timer = ref(30);
+let interval: number | undefined;
+
+function startTimer() {
+    timer.value = 30;
+    interval = setInterval(() => {
+        timer.value--;
+        if (timer.value === 0) {
+            clearInterval(interval);
+        }
+    }, 1000);
+}
 function logout() {
     router.post(route("logout"));
 }
@@ -26,7 +43,7 @@ const verificationLinkSent = computed(
 
     <v-container style="height: 100vh">
         <v-row justify="center" class="fill-height">
-            <v-col align-self="center" cols="12" md="5">
+            <v-col align-self="center" cols="12" md="7">
                 <v-card
                     title="Verify your email"
                     subtitle="You must verify your email address to continue"
@@ -51,9 +68,14 @@ const verificationLinkSent = computed(
                     <template #actions>
                         <div class="d-flex w-100 justify-space-between">
                             <v-btn
-                                text="Resend Verification Email"
+                                :text="
+                                    timer == 0
+                                        ? 'Resend Verification Email'
+                                        : `Resend in ${timer}s`
+                                "
                                 :loading="form.processing"
-                                @click="submit"
+                                :disabled="timer > 0"
+                                @click="sendVerificationLink"
                             />
                             <div class="d-flex ga-2">
                                 <v-btn

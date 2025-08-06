@@ -35,7 +35,7 @@ const headers = [
 const form = useForm({
     name: "",
     email: "",
-    role: null,
+    role_id: null,
 });
 
 function createUser(closeDialog: Function) {
@@ -52,14 +52,14 @@ const editForm = useForm({
     id: null as number | null,
     name: "",
     email: "",
-    role: null as number | null,
+    role_id: null as number | null,
 });
 
 function selectItemToEdit(user: User) {
     editForm.id = user.id;
     editForm.name = user.name;
     editForm.email = user.email;
-    editForm.role = user.roles.length > 0 ? user.roles[0].id : null;
+    editForm.role_id = user.roles.length > 0 ? user.roles[0].id : null;
 }
 
 function saveChanges(closeDialog: Function) {
@@ -98,27 +98,25 @@ function saveChanges(closeDialog: Function) {
                     v-model="form.email"
                     :error-messages="form.errors.email"
                 />
-                <Deferred data="roles">
-                    <v-select
-                        label="Role"
-                        prepend-inner-icon="mdi-shield-account-outline"
-                        v-model="form.role"
-                        :items="roles"
-                        :error-messages="form.errors.role"
-                        :item-title="
-                            (item) =>
-                                item.name
-                                    .split(' ')
-                                    .map(
-                                        (word) =>
-                                            word.charAt(0).toUpperCase() +
-                                            word.slice(1)
-                                    )
-                                    .join(' ')
-                        "
-                        item-value="id"
-                    />
-                </Deferred>
+                <v-select
+                    label="Role"
+                    prepend-inner-icon="mdi-shield-account-outline"
+                    v-model="form.role_id"
+                    :items="roles"
+                    :error-messages="form.errors.role_id"
+                    :item-title="
+                        (item) =>
+                            item.name
+                                .split(' ')
+                                .map(
+                                    (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1)
+                                )
+                                .join(' ')
+                    "
+                    item-value="id"
+                />
             </v-form>
         </template>
 
@@ -145,9 +143,9 @@ function saveChanges(closeDialog: Function) {
                     <v-select
                         label="Role"
                         prepend-inner-icon="mdi-shield-account-outline"
-                        v-model="editForm.role"
+                        v-model="editForm.role_id"
                         :items="roles"
-                        :error-messages="editForm.errors.role"
+                        :error-messages="editForm.errors.role_id"
                         :item-title="
                             (item) =>
                                 item.name

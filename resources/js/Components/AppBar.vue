@@ -60,12 +60,12 @@ const unreadNotifications = computed(() => {
 
 <template>
     <SideBar :drawer="drawer" @closed="drawer = false" />
-    <v-app-bar title="Laravel Starter Kit">
-        <div class="h-100 w-100 d-flex align-center justify-space-between">
-            <div class="d-flex">
-                <v-icon icon="mdi-menu" class="my-auto" @click="toggleDrawer" />
-                <p class="text-h5 ml-2 text-primary">Laravel</p>
-            </div>
+    <v-app-bar>
+        <template #prepend>
+            <v-icon icon="mdi-menu" class="my-auto" @click="toggleDrawer" />
+        </template>
+
+        <div class="h-100 w-100 d-flex align-center justify-end">
             <div class="d-flex">
                 <v-icon
                     :icon="

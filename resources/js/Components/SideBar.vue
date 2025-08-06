@@ -94,26 +94,33 @@ function logout() {
         :permanent="!mobile"
         @update:model-value="($event: boolean) => !$event && $emit('closed')"
     >
-        <v-list class="pa-2" nav>
-            <!-- custom logo -->
-            <AppCustomLogo />
+        <template #prepend>
+            <div class="pa-2">
+                <!-- custom logo -->
+                <div class="d-flex justify-center">
+                    <AppCustomLogo />
+                </div>
 
-            <!-- time -->
-            <div class="mt-1 d-flex justify-center align-center">
-                <v-icon icon="mdi-clock-outline" />
-                <p class="font-weight-bold">
-                    {{ time }}
-                </p>
+                <!-- time -->
+                <div class="mt-1 d-flex justify-center align-center">
+                    <v-icon icon="mdi-clock-outline" size="small" />
+                    <p class="font-weight-regular text-subtitle-2 ml-1 mt-1">
+                        {{ time }}
+                    </p>
+                </div>
             </div>
 
+            <v-divider class="ma-1" />
+        </template>
+
+        <v-list class="pa-2" nav>
             <!-- sidebar links -->
             <div v-for="link in links">
-                <v-list-subheader>{{ link.title }}</v-list-subheader>
+                <v-list-subheader class="text-uppercase" v-text="link.title" />
                 <!-- @vue-ignore -->
                 <v-list-item
                     v-for="child in link.children"
                     v-use-inertia-link
-                  
                     :key="child.title"
                     :href="route(child.route)"
                     :active="route().current(`${baseRouteName(child.route)}.*`)"

@@ -24,7 +24,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view users');
-        
+
         return Inertia::render('Users/Index', [
             'users' => User::with('roles')
                 ->when($request->search, function ($query, $search) {
@@ -37,7 +37,7 @@ class UserController extends Controller
                     });
                 })
                 ->paginate($request->itemsPerPage ?? 10, ['*'], 'page', $request->page ?? 1),
-            'roles' => Inertia::defer(fn() => Role::all()),
+            'roles' => Role::all(),
             'filterOptions' => [
                 'role' => Role::all()->map(function ($role) {
                     return [
@@ -70,7 +70,7 @@ class UserController extends Controller
         $user->password = Hash::make(Str::random(8));
         $user->save();
 
-        $user->assignRole($request->role);
+        $user->assignRole($request->role_id);
         $this->sendNewUserEmail($user);
 
         sendFlashMessage('success', 'User created successfully!');
@@ -159,7 +159,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        $user->forceDelete();
 
         sendFlashMessage('success', 'User deleted successfully!');
 
@@ -180,7 +180,7 @@ class UserController extends Controller
         $user->save();
 
         $user->notify(new GeneralNotification(
-            title: 'Welcome to'. config('app.name'),
+            title: 'Welcome to' . config('app.name'),
             message: 'You have been registered as a user in the application.',
             action: route('profile.show'),
             mailable: 'emails.users.welcome_mail',
