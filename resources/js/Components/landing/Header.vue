@@ -31,9 +31,11 @@ function changeTheme() {
                 @click="changeTheme"
             />
             <v-btn
+                v-use-inertia-link
                 text="Get Started"
                 variant="elevated"
                 class="bg-custom ml-2"
+                :href="route('login')"
             />
         </div>
     </v-app-bar>

@@ -8,3 +8,18 @@
         </div>
     </base-link>
 </template>
+
+<style scoped>
+.bg-custom {
+    background-image: linear-gradient(to right, #a855f7, #ec4899);
+    color: white;
+}
+
+.text-custom {
+    background-image: linear-gradient(to right, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+</style>

@@ -23,8 +23,13 @@ export default createVuetify({
         themes: {
             light: {
                 colors: {
-                    primary: "#6c63ff",
+                    primary: "#a855f7",
                     background: "#f4f5f7",
+                },
+            },
+            dark: {
+                colors: {
+                    primary: "#ec4899",
                 },
             },
         },
